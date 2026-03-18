@@ -1,0 +1,15 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'>
+  <!-- 8-bit random shapes in soft orange/brown over yellow -->
+  <g fill='rgba(194, 65, 12, 0.15)'>
+    <!-- squiggle -->
+    <path d='M20 30h10v10h10v10h10v10h-10v-10h-10v-10h-10z' />
+    <path d='M130 50h10v10h-10v10h-10v-10h10z' />
+    <path d='M90 120h20v10h-20z' />
+    <path d='M40 100h10v-10h10v10h10v10h-10v10h-10v-10h-10z' />
+    <path d='M10 140h10v10h-10z' />
+    <path d='M140 140h10v10h10v-10h-10v-10h-10z' />
+    <path d='M70 20h10v10h-10z' />
+    <!-- circle/ring -->
+    <path d='M100 20h20v10h10v20h-10v10h-20v-10h-10v-20h10zm10 10h10v10h-10v-10h-10z' />
+  </g>
+</svg>

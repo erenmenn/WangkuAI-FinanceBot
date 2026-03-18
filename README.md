@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/img/robot-cat.png" width="130" alt="WangkuAI Mascot" />
 
-  <h1>🐱 WangkuAI</h1>
+  <h1> WangkuAI</h1>
   <h3>Asisten Pribadi untuk Pengelolaan Keuangan</h3>
   <p><i>Cukup ketik seperti chat ke teman — WangkuAI yang urus sisanya.</i></p>
 

@@ -314,7 +314,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div style={{ display:'flex', gap:'8px' }}>
-          <Link href="/" style={{ display:'inline-flex',alignItems:'center',gap:'6px',padding:'7px 16px',borderRadius: '4px',fontSize:'13px',fontWeight:600,textDecoration:'none',border:'1px solid rgba(255, 160, 0,.13)',background:'#EA580C',color:'white',border: '4px solid #1C1917', boxShadow: '4px 4px 0px #1C1917', borderRadius: '4px' }}>
+          <Link href="/" style={{ display:'inline-flex',alignItems:'center',gap:'6px',padding:'7px 16px',fontSize:'13px',fontWeight:600,textDecoration:'none',background:'#EA580C',color:'white',border: '4px solid #1C1917', boxShadow: '4px 4px 0px #1C1917', borderRadius: '4px' }}>
             ← Chat
           </Link>
         </div>
@@ -428,7 +428,7 @@ export default function DashboardPage() {
                   <p style={{ fontSize:'13px', color:'#1C1917', margin:0 }}>Lihat riwayat lengkap transaksi, filter kategori NLP, dan download laporan sebagai CSV.</p>
                 </div>
               </div>
-              <div style={{ width:'40px', height:'40px', borderRadius:'50%', background:'white', border:'1px solid var(--border-soft)', display:'flex', alignItems:'center', justifyContent:'center', color:'#1C1917', fontSize:'18px', border: '3px solid #1C1917', boxShadow: '3px 3px 0px #1C1917' }}>
+              <div style={{ width:'40px', height:'40px', borderRadius:'50%', background:'white', display:'flex', alignItems:'center', justifyContent:'center', color:'#1C1917', fontSize:'18px', border: '3px solid #1C1917', boxShadow: '3px 3px 0px #1C1917' }}>
                 →
               </div>
             </div>
@@ -452,7 +452,7 @@ export default function DashboardPage() {
                   <p style={{ fontSize:'13px', color:'#1C1917', margin:0 }}>Kembali ke menu utama untuk mencatat pengeluaran dan melihat saldo.</p>
                 </div>
               </div>
-              <div style={{ width:'40px', height:'40px', borderRadius:'50%', background:'white', border:'1px solid var(--border-soft)', display:'flex', alignItems:'center', justifyContent:'center', color:'#10b981', fontSize:'18px', border: '3px solid #1C1917', boxShadow: '3px 3px 0px #1C1917' }}>
+              <div style={{ width:'40px', height:'40px', borderRadius:'50%', background:'white', display:'flex', alignItems:'center', justifyContent:'center', color:'#10b981', fontSize:'18px', border: '3px solid #1C1917', boxShadow: '3px 3px 0px #1C1917' }}>
                 →
               </div>
             </div>

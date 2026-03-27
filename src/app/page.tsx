@@ -72,7 +72,14 @@ export default function Home() {
     const text = inputValue.trim();
     if (!text || isProcessing) return;
 
+    const playSendSound = () => {
+      const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+      audio.volume = 0.6;
+      audio.play().catch(() => {});
+    };
+
     setInputValue('');
+    playSendSound();
     if (inputRef.current) {
       inputRef.current.style.height = 'auto';
     }

@@ -3,269 +3,248 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
-export default function LoginPage() {
+export default function LandingLoginPage() {
   const router = useRouter();
+  const [activeModal, setActiveModal] = useState<'none' | 'login' | 'register'>('none');
+  
+  // States Login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // States Register
+  const [regName, setRegName] = useState("");
+  const [regEmail, setRegEmail] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regConfirm, setRegConfirm] = useState("");
+  const [regError, setRegError] = useState("");
+  const [regSuccess, setRegSuccess] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setLoginError("");
     setLoading(true);
-
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
+    const res = await signIn("credentials", { email, password, redirect: false });
     setLoading(false);
-
+    
     if (res?.error) {
-      setError("Email atau password salah. Silakan coba lagi.");
+      setLoginError("Email atau password salah.");
     } else {
       router.push("/");
       router.refresh();
     }
   };
 
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegError(""); setRegSuccess("");
+    if (regPassword !== regConfirm) return setRegError("Password tidak cocok!");
+    if (regPassword.length < 6) return setRegError("Minimal 6 karakter.");
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: regName, email: regEmail, password: regPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) setRegError(data.error || "Gagal mendaftar.");
+      else {
+        setRegSuccess("✅ Akun berhasil dibuat! Silakan login.");
+        setTimeout(() => {
+           setActiveModal('login');
+           setEmail(regEmail);
+           setPassword(regPassword);
+        }, 1500);
+      }
+    } catch {
+      setRegError("Gagal terhubung ke server.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const playClickSound = () => {
+    const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+    audio.volume = 0.6;
+    audio.play().catch(() => {});
+  };
+
   return (
     <>
-      {/* Background sama persis dengan page.tsx */}
-      <div className="smoke-container">
-        <div className="smoke-blob" style={{ width: 750, height: 750, background: "rgba(255, 193, 7,0.38)", left: -220, top: -220, opacity: 1 }} />
-        <div className="smoke-blob" style={{ width: 850, height: 850, background: "rgba(255, 160, 0,0.30)", right: -260, bottom: -260, animationDelay: "-7s", opacity: 0.95 }} />
-        <div className="smoke-blob" style={{ width: 650, height: 650, background: "rgba(255, 224, 130,0.28)", left: "25%", top: "8%", animationDelay: "-12s" }} />
-        <div className="smoke-blob" style={{ width: 580, height: 580, background: "rgba(255, 236, 179,0.25)", right: "6%", top: "30%", animationDelay: "-18s" }} />
-        <div className="smoke-blob" style={{ width: 500, height: 500, background: "rgba(230, 81, 0,0.22)", left: "8%", bottom: 0, animationDelay: "-4s" }} />
-      </div>
-
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "24px",
-        position: "relative",
-        zIndex: 1,
-      }}>
-        <div style={{
-          width: "100%",
-          maxWidth: 420,
-          background: "rgba(255,255,255,0.85)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          borderRadius: 24,
-          border: "1.5px solid rgba(255,255,255,0.7)",
-          boxShadow: "0 20px 60px rgba(255, 160, 0,0.18), 0 4px 16px rgba(0,0,0,0.06)",
-          padding: "40px 36px",
-          animation: "fadeIn 0.6s ease",
-        }}>
-          {/* Logo */}
-          <div style={{ textAlign: "center", marginBottom: 32 }}>
-            <div style={{
-              width: 56,
-              height: 56,
-              borderRadius: "50%",
-              background: "linear-gradient(135deg,#E65100,#FFCA28)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "0 auto 14px",
-              boxShadow: "0 8px 24px rgba(255, 160, 0,0.35)",
-            }}>
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
-              </svg>
-            </div>
-            <div style={{
-              fontFamily: "'Pixelify Sans', sans-serif",
-              fontSize: 26,
-              fontWeight: 700,
-              color: "#E65100",
-              letterSpacing: "-0.5px",
-            }}>MinoAI</div>
-            <div style={{
-              fontFamily: "'VT323', monospace",
-              fontSize: 13,
-              color: "#1C1917",
-              marginTop: 4,
-            }}>Asisten Keuangan Pribadi Berbasis AI</div>
-          </div>
-
-          {/* Divider */}
-          <div style={{
-            height: 1,
-            background: "linear-gradient(90deg,transparent,rgba(255, 193, 7,0.3),transparent)",
-            marginBottom: 28,
-          }} />
-
-          {/* Title */}
-          <div style={{ marginBottom: 24 }}>
-            <div style={{
-              fontFamily: "'Pixelify Sans', sans-serif",
-              fontSize: 22,
-              color: "#BF360C",
-              marginBottom: 4,
-            }}>Selamat Datang 👋</div>
-            <div style={{ fontFamily: "'VT323', monospace", fontSize: 13, color: "#1C1917" }}>
-              Masuk ke akun MinoAI kamu
-            </div>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {error && (
-              <div style={{
-                background: "rgba(239,68,68,0.08)",
-                border: "1px solid rgba(239,68,68,0.3)",
-                borderRadius: 10,
-                padding: "10px 14px",
-                fontFamily: "'VT323', monospace",
-                fontSize: 13,
-                color: "#dc2626",
-              }}>
-                ⚠️ {error}
-              </div>
-            )}
-
-            <div>
-              <label style={{
-                fontFamily: "'VT323', monospace",
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#374151",
-                display: "block",
-                marginBottom: 6,
-                textTransform: "uppercase",
-                letterSpacing: "0.6px",
-              }}>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="nama@email.com"
-                required
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  borderRadius: 12,
-                  border: "1.5px solid rgba(255, 193, 7,0.25)",
-                  background: "rgba(255,255,255,0.9)",
-                  fontFamily: "'VT323', monospace",
-                  fontSize: 14,
-                  color: "#1e293b",
-                  outline: "none",
-                  boxSizing: "border-box",
-                  transition: "border-color 0.2s",
-                }}
-                onFocus={(e) => e.target.style.borderColor = "rgba(255, 160, 0,0.6)"}
-                onBlur={(e) => e.target.style.borderColor = "rgba(255, 193, 7,0.25)"}
-              />
-            </div>
-
-            <div>
-              <label style={{
-                fontFamily: "'VT323', monospace",
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#374151",
-                display: "block",
-                marginBottom: 6,
-                textTransform: "uppercase",
-                letterSpacing: "0.6px",
-              }}>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Minimal 6 karakter"
-                required
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  borderRadius: 12,
-                  border: "1.5px solid rgba(255, 193, 7,0.25)",
-                  background: "rgba(255,255,255,0.9)",
-                  fontFamily: "'VT323', monospace",
-                  fontSize: 14,
-                  color: "#1e293b",
-                  outline: "none",
-                  boxSizing: "border-box",
-                  transition: "border-color 0.2s",
-                }}
-                onFocus={(e) => e.target.style.borderColor = "rgba(255, 160, 0,0.6)"}
-                onBlur={(e) => e.target.style.borderColor = "rgba(255, 193, 7,0.25)"}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                width: "100%",
-                padding: "13px",
-                borderRadius: 12,
-                border: "none",
-                background: loading
-                  ? "rgba(255, 193, 7,0.5)"
-                  : "linear-gradient(135deg,#E65100,#FFCA28)",
-                color: "white",
-                fontFamily: "'VT323', monospace",
-                fontSize: 15,
-                fontWeight: 700,
-                cursor: loading ? "not-allowed" : "pointer",
-                letterSpacing: "0.3px",
-                marginTop: 4,
-                boxShadow: loading ? "none" : "0 4px 16px rgba(255, 160, 0,0.35)",
-                transition: "all 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) (e.target as HTMLButtonElement).style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLButtonElement).style.transform = "translateY(0)";
-              }}
-            >
-              {loading ? "⏳ Memproses..." : "🚀 Masuk"}
-            </button>
-          </form>
-
-          {/* Divider */}
-          <div style={{
-            height: 1,
-            background: "linear-gradient(90deg,transparent,rgba(255, 193, 7,0.2),transparent)",
-            margin: "24px 0",
-          }} />
-
-          {/* Register link */}
-          <div style={{ textAlign: "center", fontFamily: "'VT323', monospace", fontSize: 13, color: "#1C1917" }}>
-            Belum punya akun?{" "}
-            <Link
-              href="/auth/register"
-              style={{
-                color: "#E65100",
-                fontWeight: 700,
-                textDecoration: "none",
-                transition: "color 0.2s",
-              }}
-            >
-              Daftar sekarang →
-            </Link>
-          </div>
-        </div>
-      </div>
-
       <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&family=VT323&display=swap');
+        
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #000; }
+        
+        .landing-bg {
+          width: 100vw; height: 100vh;
+          background-image: url('/img/image.png');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+          touch-action: pan-y; /* Mencegah pinch-to-zoom di perangkat layar sentuh */
+          position: relative;
         }
+
+        .pixel-btn {
+          font-family: 'Pixelify Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          padding: 14px 40px;
+          cursor: pointer;
+          border-radius: 6px;
+          transition: all 0.1s ease;
+          border: 4px solid #1C1917;
+          box-shadow: 6px 6px 0px #1C1917;
+          animation: pulseBtn 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseBtn {
+          0%, 100% { transform: scale(1); filter: brightness(1); box-shadow: 6px 6px 0px #1C1917; }
+          50% { transform: scale(1.05); filter: brightness(1.2); box-shadow: 8px 8px 0px #1C1917; }
+        }
+        
+        .pixel-btn.primary { background: #E65100; color: white; }
+        .pixel-btn.primary:hover { background: #FF8F00; animation: none; transform: translate(2px, 2px); box-shadow: 4px 4px 0px #1C1917; }
+        
+        .pixel-btn.secondary { background: #ffffff; color: #1C1917; }
+        .pixel-btn.secondary:hover { background: #fdfdfd; animation: none; transform: translate(2px, 2px); box-shadow: 4px 4px 0px #1C1917; }
+
+        .modal-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(0,0,0,0.8);
+          backdrop-filter: blur(5px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 50;
+          animation: fadeIn 0.3s ease;
+        }
+
+        .modal-card {
+          width: 90%;
+          maxWidth: 380px;
+          background: #fff;
+          border: 4px solid #1C1917;
+          box-shadow: 8px 8px 0px #1C1917;
+          border-radius: 12px;
+          padding: 32px;
+          position: relative;
+          animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .close-btn {
+          position: absolute;
+          top: -12px; right: -12px;
+          width: 30px; height: 30px;
+          background: #ef4444;
+          border: 3px solid #1C1917;
+          color: white; font-weight: bold; font-family: 'VT323'; fontSize: 18px;
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 2px 2px 0px #1C1917;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .close-btn:hover { background: #b91c1c; transform: translate(2px, 2px); box-shadow: 1px 1px 0px #1C1917; }
+
+        .input-field {
+          width: 100%;
+          padding: 12px;
+          border: 3px solid #1C1917;
+          border-radius: 6px;
+          font-family: 'VT323', monospace;
+          font-size: 16px;
+          outline: none;
+          box-sizing: border-box;
+          margin-bottom: 12px;
+        }
+        .input-field:focus { background: #FFFDE7; border-color: #E65100; box-shadow: inset 4px 4px 0px rgba(0,0,0,0.05); }
+
+        .label-text {
+          font-family: 'Pixelify Sans', sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          color: #1C1917;
+          margin-bottom: 4px;
+          display: block;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
       `}</style>
+
+      <div className="landing-bg">
+        {/* Bagian Tombol Login & Daftar */}
+        <div style={{ position: "absolute", top: 120, right: 48, display: "flex", flexDirection: "column", gap: "20px" }}>
+          <button onClick={() => { playClickSound(); setActiveModal('login'); }} className="pixel-btn primary">Login</button>
+          <button onClick={() => { playClickSound(); setActiveModal('register'); }} className="pixel-btn secondary">Daftar Baru</button>
+        </div>
+
+        {/* MODAL AREA */}
+        {activeModal !== 'none' && (
+          <div className="modal-overlay">
+            <div className="modal-card">
+              <button className="close-btn" onClick={() => setActiveModal('none')}>X</button>
+              
+              <div style={{ textAlign: "center", marginBottom: 20 }}>
+                <h1 style={{ fontFamily: "'Pixelify Sans'", fontSize: 24, margin: 0, color: "#E65100", textShadow: "1px 1px 0px #1C1917" }}>
+                  {activeModal === 'login' ? 'MULAI MAIN!' : 'GABUNG SEKARANG!'}
+                </h1>
+                <p style={{ fontFamily: "'VT323'", fontSize: 15, margin: "4px 0 0", color: "#666" }}>
+                  {activeModal === 'login' ? 'Masuk ke portal WangkuAI' : 'Buat karakter pertamamu'}
+                </p>
+              </div>
+
+              {/* FORM LOGIN */}
+              {activeModal === 'login' && (
+                <form onSubmit={handleLogin}>
+                  {loginError && <div style={{ background: "#fee2e2", border: "2px solid #ef4444", padding: 8, fontFamily: "'VT323'", color: "#b91c1c", marginBottom: 12 }}>⚠️ {loginError}</div>}
+                  <label className="label-text">EMAIL PLAYER</label>
+                  <input type="email" className="input-field" placeholder="contoh@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  
+                  <label className="label-text">KATA SANDI</label>
+                  <input type="password" className="input-field" placeholder="******" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                  
+                  <button type="submit" disabled={loading} className="pixel-btn primary" style={{ width: "100%", marginTop: 8 }}>
+                    {loading ? 'MEMUAT...' : 'START GAME'}
+                  </button>
+                  <p style={{ textAlign: "center", fontFamily: "'VT323'", fontSize: 14, marginTop: 16 }}>Belum punya akun? <span onClick={() => setActiveModal('register')} style={{ color: "#E65100", cursor: "pointer", fontWeight: "bold" }}>Daftar →</span></p>
+                </form>
+              )}
+
+              {/* FORM REGISTER */}
+              {activeModal === 'register' && (
+                <form onSubmit={handleRegister}>
+                  {regError && <div style={{ background: "#fee2e2", border: "2px solid #ef4444", padding: 8, fontFamily: "'VT323'", color: "#b91c1c", marginBottom: 12 }}>⚠️ {regError}</div>}
+                  {regSuccess && <div style={{ background: "#d1fae5", border: "2px solid #10b981", padding: 8, fontFamily: "'VT323'", color: "#065f46", marginBottom: 12 }}>{regSuccess}</div>}
+                  
+                  <label className="label-text">NICKNAME</label>
+                  <input type="text" className="input-field" placeholder="Nama Player" value={regName} onChange={(e) => setRegName(e.target.value)} required />
+
+                  <label className="label-text">EMAIL PLAYER</label>
+                  <input type="email" className="input-field" placeholder="contoh@email.com" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required />
+                  
+                  <label className="label-text">KATA SANDI BARU</label>
+                  <input type="password" className="input-field" placeholder="******" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} required />
+                  
+                  <label className="label-text">ULANGI SANDI</label>
+                  <input type="password" className="input-field" placeholder="******" value={regConfirm} onChange={(e) => setRegConfirm(e.target.value)} required />
+
+                  <button type="submit" disabled={loading} className="pixel-btn secondary" style={{ width: "100%", marginTop: 8 }}>
+                    {loading ? 'MEMBUAT...' : 'CREATE ACCOUNT'}
+                  </button>
+                  <p style={{ textAlign: "center", fontFamily: "'VT323'", fontSize: 14, marginTop: 16 }}>Sudah punya akun? <span onClick={() => setActiveModal('login')} style={{ color: "#E65100", cursor: "pointer", fontWeight: "bold" }}>Login →</span></p>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 }

@@ -26,10 +26,6 @@ html, body {
   font-family: 'VT323', monospace;
   color: #1C1917;
   background-color: var(--bg);
-
-  background-color: #FFFFFF;
-  font-family: 'Pixelify Sans', sans-serif;
-  letter-spacing: 0.5px;
 }
 
 /* ══════════════════════════════

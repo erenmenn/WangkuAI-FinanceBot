@@ -198,6 +198,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchCat, setSearchCat] = useState('');
   const [filterCat, setFilterCat] = useState('all');
 
@@ -208,9 +209,22 @@ export default function DashboardPage() {
   useEffect(() => {
     if (status !== 'authenticated') return;
     fetch('/api/stats/dashboard')
-      .then(r => r.json())
-      .then(d => { setData(d); setLoading(false); })
-      .catch(() => setLoading(false));
+      .then(async r => {
+        if (!r.ok) {
+           const text = await r.text();
+           throw new Error(`API Error ${r.status}: ${text.substring(0, 100)}`);
+        }
+        return r.json();
+      })
+      .then(d => { 
+        setData(d); 
+        setLoading(false); 
+      })
+      .catch((err) => { 
+        console.error("Dashboard Fetch Error:", err);
+        setError(err.message || "Gagal memuat data");
+        setLoading(false); 
+      });
   }, [status]);
 
   if (status === 'loading' || loading) {
@@ -220,6 +234,16 @@ export default function DashboardPage() {
           <div style={{ fontSize: '36px', marginBottom: '12px', animation: 'spin 1s linear infinite' }}>⏳</div>
           <p style={{ color: '#1C1917', fontFamily: "'VT323', monospace" }}>Memuat dashboard…</p>
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#FFFDE7', padding: 20, textAlign: 'center' }}>
+        <h2 style={{ color: '#ef4444' }}>Opps! Terjadi Masalah.</h2>
+        <p style={{ margin: '10px 0', color: '#1C1917' }}>{error}</p>
+        <button onClick={() => window.location.reload()} style={{ padding: '8px 20px', background: '#1C1917', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer' }}>Coba Segarkan Halaman</button>
       </div>
     );
   }

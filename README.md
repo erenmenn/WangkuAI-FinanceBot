@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/img/robot-cat.png" width="130" alt="WangkuAI Mascot" />
 
-  <h1>🐱 WangkuAI</h1>
+  <h1>WangkuAI</h1>
   <h3>Asisten Pribadi untuk Pengelolaan Keuangan</h3>
   <p><i>Cukup ketik seperti chat ke teman — WangkuAI yang urus sisanya.</i></p>
 
@@ -14,14 +14,14 @@
   <img src="https://img.shields.io/badge/NLP-IndoBERT-FF9D00?style=for-the-badge&logo=huggingface" />
   <img src="https://img.shields.io/badge/Multi--User-✅-success?style=for-the-badge" />
 
-  <br/><br/>
+<br/><br/>
 
-  <a href="#-apa-itu-wangkuai">💬 Tentang</a> &nbsp;•&nbsp;
-  <a href="#-lihat-sendiri-cara-kerjanya">🎬 Demo</a> &nbsp;•&nbsp;
-  <a href="#-cara-kerja-di-balik-layar">⚙️ Cara Kerja</a> &nbsp;•&nbsp;
-  <a href="#-fitur-lengkap">✨ Fitur</a> &nbsp;•&nbsp;
-  <a href="#-wangkuai-vs-aplikasi-keuangan-lain">🆚 Perbandingan</a> &nbsp;•&nbsp;
-  <a href="#️-arsitektur">🏗️ Arsitektur</a>
+<a href="#-apa-itu-wangkuai">💬 Tentang</a> &nbsp;•&nbsp;
+<a href="#-lihat-sendiri-cara-kerjanya">🎬 Demo</a> &nbsp;•&nbsp;
+<a href="#-cara-kerja-di-balik-layar">⚙️ Cara Kerja</a> &nbsp;•&nbsp;
+<a href="#-fitur-lengkap">✨ Fitur</a> &nbsp;•&nbsp;
+<a href="#-wangkuai-vs-aplikasi-keuangan-lain">🆚 Perbandingan</a> &nbsp;•&nbsp;
+<a href="#️-arsitektur">🏗️ Arsitektur</a>
 
 </div>
 
@@ -33,7 +33,7 @@
 
 ### Masalah yang diselesaikan
 
-Banyak orang *niat* mencatat keuangan, tapi cepat menyerah karena prosesnya melelahkan:
+Banyak orang _niat_ mencatat keuangan, tapi cepat menyerah karena prosesnya melelahkan:
 
 ```
 Aplikasi konvensional:
@@ -199,19 +199,19 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 
 ## 🆚 WangkuAI vs Aplikasi Keuangan Lain
 
-|  | 🐱 **WangkuAI** | 💼 Tabungan / Money Manager | 📱 YNAB / Wallet |
-|---|:---:|:---:|:---:|
-| Input via chat bahasa natural | ✅ | ❌ | ❌ |
-| Kategori terdeteksi otomatis | ✅ | ❌ Manual | ❌ Manual |
-| Multi-item dalam 1 pesan | ✅ | ❌ | ❌ |
-| Hitung `3x@12000` otomatis | ✅ | ❌ | ❌ |
-| Deteksi tanggal dari teks | ✅ | ❌ | ❌ |
-| Bahasa Indonesia penuh | ✅ | 🔶 Sebagian | ❌ |
-| Tips keuangan kontekstual | ✅ | ❌ | ❌ |
-| Budget alert real-time di chat | ✅ | 🔶 Premium | 🔶 Premium |
-| Dashboard + export CSV gratis | ✅ | 🔶 Berbayar | 🔶 Berbayar |
-| Multi-user cloud | ✅ | 🔶 Berbayar | 🔶 Berbayar |
-| Open source & self-hostable | ✅ | ❌ | ❌ |
+|                                | 🐱 **WangkuAI** | 💼 Tabungan / Money Manager | 📱 YNAB / Wallet |
+| ------------------------------ | :-------------: | :-------------------------: | :--------------: |
+| Input via chat bahasa natural  |       ✅        |             ❌              |        ❌        |
+| Kategori terdeteksi otomatis   |       ✅        |          ❌ Manual          |    ❌ Manual     |
+| Multi-item dalam 1 pesan       |       ✅        |             ❌              |        ❌        |
+| Hitung `3x@12000` otomatis     |       ✅        |             ❌              |        ❌        |
+| Deteksi tanggal dari teks      |       ✅        |             ❌              |        ❌        |
+| Bahasa Indonesia penuh         |       ✅        |         🔶 Sebagian         |        ❌        |
+| Tips keuangan kontekstual      |       ✅        |             ❌              |        ❌        |
+| Budget alert real-time di chat |       ✅        |         🔶 Premium          |    🔶 Premium    |
+| Dashboard + export CSV gratis  |       ✅        |         🔶 Berbayar         |   🔶 Berbayar    |
+| Multi-user cloud               |       ✅        |         🔶 Berbayar         |   🔶 Berbayar    |
+| Open source & self-hostable    |       ✅        |             ❌              |        ❌        |
 
 > **Intinya:** WangkuAI adalah satu-satunya yang memahami `"beli baju 80rb dan makan 25rb dan kopi 15rb"` sebagai **3 transaksi berbeda, setiap kategori terdeteksi otomatis**, dalam hitungan detik. Nol form. Nol klik. Nol ribet.
 
@@ -248,47 +248,47 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
  └─────────┘   └────────────────────┘
 ```
 
-| Layer | Yang Dipakai |
-|---|---|
-| Framework | Next.js 16, TypeScript |
-| Auth | NextAuth.js (JWT session) |
-| Database | SQLite (dev) · PostgreSQL (prod) |
-| ORM | Prisma |
-| NLP Utama | HuggingFace IndoBERT (Zero-Shot NLI) |
-| NLP Fallback | Custom regex rule engine (selalu aktif) |
-| UI | Vanilla CSS · Pixelify Sans · Press Start 2P |
+| Layer        | Yang Dipakai                                 |
+| ------------ | -------------------------------------------- |
+| Framework    | Next.js 16, TypeScript                       |
+| Auth         | NextAuth.js (JWT session)                    |
+| Database     | SQLite (dev) · PostgreSQL (prod)             |
+| ORM          | Prisma                                       |
+| NLP Utama    | HuggingFace IndoBERT (Zero-Shot NLI)         |
+| NLP Fallback | Custom regex rule engine (selalu aktif)      |
+| UI           | Vanilla CSS · Pixelify Sans · Press Start 2P |
 
 ---
 
 ## 🎯 25+ Kategori Terdeteksi Otomatis
 
-| Emoji | Kategori | Contoh Kata Kunci |
-|---|---|---|
-| 🍜 | Makanan | nasi, ayam, bakso, makan siang, soto |
-| ☕ | Minuman | kopi, teh, boba, jus, es teh |
-| 🚗 | Transport | grab, ojek, gojek, parkir, kereta |
-| ⛽ | BBM | bensin, pertamax, pertalite, isi motor |
-| 🛒 | Belanja | shopee, tokopedia, indomaret, alfamart |
-| 👗 | Fashion | baju, sepatu, jaket, celana, tas |
-| 🎓 | Kuliah | SPP, UKT, uang kuliah, kampus |
-| ✏️ | Keperluan Kuliah | print, fotocopy, flashdisk, lab |
-| 🔧 | Alat / Perkakas | palu, obeng, paku, kunci pas |
-| 💻 | Elektronik | headset, charger, laptop, powerbank |
-| 🎮 | Game | diamond ML, free fire, steam, PUBG |
-| 💳 | Top Up | gopay, dana, OVO, shopeepay |
-| 📺 | Streaming | netflix, spotify, chatgpt, disney+ |
-| 📱 | Pulsa / Data | pulsa, paket data, kuota internet |
-| 📶 | Internet | wifi, indihome, myrepublic |
-| ⚡ | Listrik | token listrik, PLN, tagihan listrik |
-| 🏥 | Kesehatan | obat, apotek, dokter, vitamin |
-| 💪 | Gym / Olahraga | gym, fitness, yoga, renang |
-| 💅 | Perawatan Diri | salon, parfum, sunscreen, serum |
-| 🏠 | Kebutuhan Rumah | deterjen, sabun piring, tisu |
-| 🎉 | Hiburan | bioskop, konser, karaoke, bowling |
-| 🛵 | Makanan Online | gofood, grabfood, shopee food |
-| 📈 | Investasi | saham, reksa dana, emas, crypto |
-| 🏦 | Tabungan | nabung, celengan, simpan |
-| 📦 | Lainnya | fallback jika tidak ada yang cocok |
+| Emoji | Kategori         | Contoh Kata Kunci                      |
+| ----- | ---------------- | -------------------------------------- |
+| 🍜    | Makanan          | nasi, ayam, bakso, makan siang, soto   |
+| ☕    | Minuman          | kopi, teh, boba, jus, es teh           |
+| 🚗    | Transport        | grab, ojek, gojek, parkir, kereta      |
+| ⛽    | BBM              | bensin, pertamax, pertalite, isi motor |
+| 🛒    | Belanja          | shopee, tokopedia, indomaret, alfamart |
+| 👗    | Fashion          | baju, sepatu, jaket, celana, tas       |
+| 🎓    | Kuliah           | SPP, UKT, uang kuliah, kampus          |
+| ✏️    | Keperluan Kuliah | print, fotocopy, flashdisk, lab        |
+| 🔧    | Alat / Perkakas  | palu, obeng, paku, kunci pas           |
+| 💻    | Elektronik       | headset, charger, laptop, powerbank    |
+| 🎮    | Game             | diamond ML, free fire, steam, PUBG     |
+| 💳    | Top Up           | gopay, dana, OVO, shopeepay            |
+| 📺    | Streaming        | netflix, spotify, chatgpt, disney+     |
+| 📱    | Pulsa / Data     | pulsa, paket data, kuota internet      |
+| 📶    | Internet         | wifi, indihome, myrepublic             |
+| ⚡    | Listrik          | token listrik, PLN, tagihan listrik    |
+| 🏥    | Kesehatan        | obat, apotek, dokter, vitamin          |
+| 💪    | Gym / Olahraga   | gym, fitness, yoga, renang             |
+| 💅    | Perawatan Diri   | salon, parfum, sunscreen, serum        |
+| 🏠    | Kebutuhan Rumah  | deterjen, sabun piring, tisu           |
+| 🎉    | Hiburan          | bioskop, konser, karaoke, bowling      |
+| 🛵    | Makanan Online   | gofood, grabfood, shopee food          |
+| 📈    | Investasi        | saham, reksa dana, emas, crypto        |
+| 🏦    | Tabungan         | nabung, celengan, simpan               |
+| 📦    | Lainnya          | fallback jika tidak ada yang cocok     |
 
 > 📊 **Uji internal:** 106 test cases — akurasi deteksi kategori **100%** ✅
 
@@ -297,6 +297,7 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 ## 🗺️ Roadmap
 
 **Sudah Ada:**
+
 - [x] 12 intent NLP (expense, income, budget, laporan, tips, dst.)
 - [x] Catat multi-item dalam 1 pesan
 - [x] Deteksi harga satuan (`3x@12000`)
@@ -309,6 +310,7 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 - [x] Autentikasi lengkap (register, login, session)
 
 **Akan Datang:**
+
 - [ ] 📸 OCR Struk — foto nota langsung dibaca & dicatat
 - [ ] 💼 Buku Utang/Kasbon — catat piutang pelanggan
 - [ ] 🛒 Mode Kasir (POS) — untuk UMKM & warung kecil

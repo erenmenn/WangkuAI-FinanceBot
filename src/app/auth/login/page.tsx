@@ -50,7 +50,7 @@ export default function LandingLoginPage() {
         body: JSON.stringify({ name: regName, email: regEmail, password: regPassword }),
       });
       const data = await res.json();
-      if (!res.ok) setRegError(data.error || "Gagal mendaftar.");
+      if (!res.ok) setRegError((data.error || "Gagal mendaftar.") + (data.detail ? ` [${data.detail}]` : ''));
       else {
         setRegSuccess("✅ Akun berhasil dibuat! Silakan login.");
         setTimeout(() => {

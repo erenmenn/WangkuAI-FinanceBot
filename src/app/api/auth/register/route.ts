@@ -41,8 +41,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, message: "Akun berhasil dibuat!" });
   } catch (error: any) {
     console.error("Register error:", error);
+    // Return detail error untuk debugging
     return NextResponse.json(
-      { error: "Terjadi kesalahan server." },
+      { 
+        error: "Terjadi kesalahan server.", 
+        detail: error?.message || String(error),
+        code: error?.code,
+      },
       { status: 500 }
     );
   }

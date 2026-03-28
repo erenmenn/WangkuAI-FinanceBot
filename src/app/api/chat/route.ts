@@ -136,6 +136,9 @@ export async function POST(req: Request) {
         lines.push(`  ${i + 1}. ${icon} ${t.description} — ${sign}${rp(t.amount)}`);
       }
 
+      // ← SIMPAN SALDO BARU KE DATABASE
+      await setBalance(userId, runningBalance);
+
       finalReply = [
         `✅ ${transactions.length} Transaksi Berhasil Dicatat!`,
         SEP,

@@ -163,16 +163,12 @@ export default function Home() {
   const formatBubble = (txt: string) =>
     txt.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
-  if (status === 'loading' || status === 'unauthenticated') {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000' }}>
-        <style>{`@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&family=VT323&display=swap');`}</style>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '36px', marginBottom: '12px', animation: 'spin 1s linear infinite' }}>⏳</div>
-          <p style={{ color: '#E65100', fontFamily: "'VT323', monospace", fontSize: '20px' }}>Memuat WangkuAI...</p>
-        </div>
-      </div>
-    );
+  if (status === 'loading') {
+    return null;
+  }
+
+  if (status === 'unauthenticated') {
+    return null;
   }
 
   return (

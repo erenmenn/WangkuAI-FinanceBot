@@ -29,138 +29,42 @@ interface SavingsData {
   history: SavingTx[];
 }
 
-// ── Animated Piggy Bank SVG ─────────────────────────────────────────────────
-function PiggyBank({ pct, jiggle }: { pct: number; jiggle: boolean }) {
-  const fillHeight = Math.min(pct, 100);
+// ── Retro Vault Visual ─────────────────────────────────────────────────
+function RetroVault({ pct, jiggle }: { pct: number; jiggle: boolean }) {
   return (
-    <div style={{ position: 'relative', width: 220, height: 220, margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: 200, height: 200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <style>{`
         @keyframes jiggle {
           0%   { transform: rotate(0deg) scale(1); }
-          15%  { transform: rotate(-8deg) scale(1.08); }
-          30%  { transform: rotate(8deg) scale(1.08); }
-          45%  { transform: rotate(-5deg) scale(1.04); }
-          60%  { transform: rotate(5deg) scale(1.04); }
-          75%  { transform: rotate(-2deg) scale(1.01); }
+          20%  { transform: rotate(-8deg) scale(1.1); }
+          40%  { transform: rotate(8deg) scale(1.1); }
+          60%  { transform: rotate(-4deg) scale(1.05); }
+          80%  { transform: rotate(4deg) scale(1.05); }
           100% { transform: rotate(0deg) scale(1); }
         }
-        @keyframes coinDrop {
-          0%   { transform: translateY(-30px); opacity:0; }
-          60%  { transform: translateY(4px); opacity:1; }
-          100% { transform: translateY(0px); opacity:1; }
-        }
-        @keyframes fillRise {
-          from { height: 0%; }
-          to   { height: ${fillHeight}%; }
-        }
-        @keyframes shimmer {
-          0%   { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        @keyframes floatPig {
+        @keyframes floatVault {
           0%, 100% { transform: translateY(0); }
-          50%       { transform: translateY(-6px); }
+          50%       { transform: translateY(-8px); }
         }
-        .pig-wrap {
-          animation: ${jiggle ? 'jiggle 0.6s ease' : 'floatPig 3s ease-in-out infinite'};
-          transform-origin: center bottom;
+        .vault-wrap {
+          animation: ${jiggle ? 'jiggle 0.5s ease' : 'floatVault 3s ease-in-out infinite'};
+          font-size: 130px;
+          filter: drop-shadow(8px 8px 0px rgba(28, 25, 23, 0.2));
         }
-        .coin-drop { animation: coinDrop 0.5s cubic-bezier(.36,.07,.19,.97) both; }
       `}</style>
-
-      <div className="pig-wrap" style={{ width: '100%', height: '100%' }}>
-        <svg viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-          <defs>
-            <clipPath id="pigBody">
-              <ellipse cx="105" cy="118" rx="78" ry="68" />
-            </clipPath>
-            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#fda4af" />
-              <stop offset="100%" stopColor="#fb7185" />
-            </linearGradient>
-            <linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.95" />
-            </linearGradient>
-            <linearGradient id="shimmerGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-              <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-              <stop offset="50%" stopColor="rgba(255,255,255,0.35)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-            </linearGradient>
-          </defs>
-
-          {/* Tail */}
-          <path d="M175 130 Q200 120 195 105 Q190 90 178 98" stroke="#f9a8d4" strokeWidth="5" strokeLinecap="round" fill="none" />
-
-          {/* Body */}
-          <ellipse cx="105" cy="118" rx="78" ry="68" fill="url(#bodyGrad)" />
-
-          {/* Liquid fill inside body */}
-          <g clipPath="url(#pigBody)">
-            <rect
-              x="27" y={118 + 68 - (136 * fillHeight / 100)}
-              width="156" height={136 * fillHeight / 100}
-              fill="url(#fillGrad)"
-              style={{ transition: 'all 1s cubic-bezier(.4,0,.2,1)' }}
-            />
-            {/* Wave on top of fill */}
-            {fillHeight > 0 && (
-              <g style={{ transition: 'all 1s' }}>
-                <path
-                  d={`M27,${118 + 68 - (136 * fillHeight / 100)} 
-                    Q55,${118 + 68 - (136 * fillHeight / 100) - 6} 
-                    83,${118 + 68 - (136 * fillHeight / 100)} 
-                    Q111,${118 + 68 - (136 * fillHeight / 100) + 6} 
-                    139,${118 + 68 - (136 * fillHeight / 100)}
-                    Q167,${118 + 68 - (136 * fillHeight / 100) - 6}
-                    183,${118 + 68 - (136 * fillHeight / 100)}`}
-                  fill="none" stroke="#fbbf24" strokeWidth="3" strokeOpacity="0.7"
-                />
-              </g>
-            )}
-          </g>
-
-          {/* Body outline */}
-          <ellipse cx="105" cy="118" rx="78" ry="68" stroke="#1C1917" strokeWidth="4" fill="none" />
-
-          {/* Coin slot on top */}
-          <rect x="88" y="52" width="30" height="7" rx="3.5" fill="#1C1917" />
-
-          {/* Head */}
-          <circle cx="170" cy="100" r="32" fill="#fda4af" stroke="#1C1917" strokeWidth="4" />
-
-          {/* Snout */}
-          <ellipse cx="187" cy="112" rx="14" ry="10" fill="#fb7185" stroke="#1C1917" strokeWidth="3" />
-          <circle cx="183" cy="112" r="3" fill="#1C1917" />
-          <circle cx="191" cy="112" r="3" fill="#1C1917" />
-
-          {/* Eye */}
-          <circle cx="163" cy="94" r="5" fill="white" stroke="#1C1917" strokeWidth="2.5" />
-          <circle cx="164" cy="95" r="2.5" fill="#1C1917" />
-
-          {/* Ear */}
-          <ellipse cx="160" cy="72" rx="10" ry="14" fill="#fda4af" stroke="#1C1917" strokeWidth="3.5" />
-          <ellipse cx="160" cy="74" rx="5" ry="8" fill="#fb7185" />
-
-          {/* Legs */}
-          {[65, 90, 118, 143].map((x, i) => (
-            <rect key={i} x={x} y="174" width="18" height="28" rx="9" fill="#fda4af" stroke="#1C1917" strokeWidth="3.5" />
-          ))}
-
-          {/* Shine */}
-          <ellipse cx="82" cy="90" rx="16" ry="10" fill="rgba(255,255,255,0.28)" transform="rotate(-30 82 90)" />
-        </svg>
-      </div>
+      
+      <div className="vault-wrap">🏦</div>
 
       {/* Percentage badge */}
       <div style={{
-        position: 'absolute', bottom: 12, right: 0,
-        background: '#1C1917', color: '#fbbf24',
+        position: 'absolute', bottom: 10, right: 10,
+        background: '#1C1917', color: '#FFCA28',
         fontFamily: "'Press Start 2P', monospace",
-        fontSize: 11, padding: '4px 10px', borderRadius: 6,
-        border: '2px solid #fbbf24', letterSpacing: 1,
+        fontSize: 12, padding: '6px 12px', borderRadius: 4,
+        border: '3px solid #FF8F00', letterSpacing: 1,
+        boxShadow: '4px 4px 0 rgba(0,0,0,0.2)'
       }}>
-        {Math.round(fillHeight)}%
+        {Math.round(Math.min(pct, 100))}%
       </div>
     </div>
   );
@@ -186,6 +90,20 @@ function CoinBurst({ active }: { active: boolean }) {
         @keyframes coinBurst1 { from{transform:translateY(0) scale(0.5);opacity:1}to{transform:translateY(-80px) translateX(40px) scale(1.1) rotate(-15deg);opacity:0} }
         @keyframes coinBurst2 { from{transform:translateY(0) scale(0.5);opacity:1}to{transform:translateY(-100px) translateX(-30px) scale(1.2) rotate(30deg);opacity:0} }
       `}</style>
+    </div>
+  );
+}
+
+function StatBox({ icon, label, val, color }: { icon: string; label: string; val: string; color: string }) {
+  return (
+    <div style={{
+      background: '#fff', border: '3px solid #1C1917',
+      boxShadow: '3px 3px 0 #1C1917', borderRadius: 6,
+      padding: '16px 14px', textAlign: 'center',
+    }}>
+      <div style={{ fontSize: 24, marginBottom: 8, filter: 'drop-shadow(2px 2px 0 rgba(0,0,0,0.1))' }}>{icon}</div>
+      <div style={{ fontSize: 11, color: '#1C1917', fontWeight: 700, marginBottom: 6, textTransform: 'uppercase' }}>{label}</div>
+      <div style={{ fontFamily: "'Press Start 2P'", fontSize: 10, color, lineHeight: 1.5 }}>{val}</div>
     </div>
   );
 }
@@ -241,7 +159,7 @@ export default function SavingsPage() {
     const d = await r.json();
     setDepositLoading(false);
     if (!d.success) { showMsg('err', d.error); return; }
-    showMsg('ok', `🐷 Berhasil simpan ${formatRp(amt)} ke celengan!`);
+    showMsg('ok', `🏦 Berhasil simpan ${formatRp(amt)} ke tabungan!`);
     setDepositInput('');
     setJiggle(true);
     setCoinBurst(true);
@@ -274,12 +192,12 @@ export default function SavingsPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff0f5' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FFFDE7' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 52, animation: 'floatPig 1.5s ease-in-out infinite' }}>🐷</div>
-          <p style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 11, color: '#e879a0', marginTop: 12 }}>Memuat celengan…</p>
+          <div style={{ fontSize: 52, animation: 'floatVault 1.5s ease-in-out infinite' }}>🏦</div>
+          <p style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 11, color: '#FF8F00', marginTop: 12 }}>Memuat brankas…</p>
         </div>
-        <style>{`@keyframes floatPig{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}`}</style>
+        <style>{`@keyframes floatVault{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}`}</style>
       </div>
     );
   }
@@ -289,131 +207,82 @@ export default function SavingsPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&family=VT323&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Pixelify Sans', sans-serif; background: #fff0f5; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #f9a8d4; border-radius: 2px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #FFCA28; border-radius: 3px; }
 
-        .sav-page { max-width: 960px; margin: 0 auto; padding: 28px 20px 80px; }
+        .scroll-wrapper {
+          height: calc(100vh - 62px);
+          overflow-y: auto;
+          overflow-x: hidden;
+          background: #FFFDE7;
+        }
+        
+        .sav-page { 
+          max-width: 980px; 
+          margin: 0 auto; 
+          padding: 32px 24px 80px; 
+          font-family: 'Pixelify Sans', sans-serif;
+        }
 
-        .pixel-card {
-          background: #fff;
-          border: 4px solid #1C1917;
-          box-shadow: 6px 6px 0px #1C1917;
-          border-radius: 8px;
-          overflow: hidden;
+        .main-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 24px;
         }
-        .pixel-card-pink {
-          background: linear-gradient(135deg, #fff0f5 0%, #fce7f3 100%);
-          border: 4px solid #1C1917;
-          box-shadow: 6px 6px 0px #1C1917;
-          border-radius: 8px;
-          overflow: hidden;
+        @media (min-width: 820px) {
+          .main-grid { grid-template-columns: 340px 1fr; }
         }
+
+        .pixel-card { background: #fff; border: 4px solid #1C1917; box-shadow: 6px 6px 0px #1C1917; border-radius: 8px; overflow: hidden; }
+        .pixel-card-yellow { background: #FBBF24; border: 4px solid #1C1917; box-shadow: 6px 6px 0px #1C1917; border-radius: 8px; overflow: hidden; }
+        
         .pixel-btn {
           display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-          padding: 12px 24px;
-          border: 3px solid #1C1917;
-          box-shadow: 4px 4px 0px #1C1917;
-          border-radius: 6px;
-          font-family: 'Pixelify Sans', sans-serif;
-          font-size: 14px; font-weight: 700;
-          cursor: pointer;
-          transition: all 0.1s;
-          width: 100%;
+          padding: 12px 18px; border: 4px solid #1C1917; box-shadow: 4px 4px 0px #1C1917; border-radius: 4px;
+          font-family: 'Press Start 2P', monospace; font-size: 10px; color: #1C1917;
+          cursor: pointer; transition: all 0.1s; line-height: 1.5;
         }
         .pixel-btn:hover:not(:disabled) { transform: translate(2px,2px); box-shadow: 2px 2px 0px #1C1917; }
         .pixel-btn:disabled { opacity: 0.6; cursor: default; }
-        .pixel-btn-pink { background: #f472b6; color: white; }
-        .pixel-btn-yellow { background: #fbbf24; color: #1C1917; }
+        .pixel-btn-orange { background: #E65100; color: white; }
+        .pixel-btn-yellow { background: #FFCA28; }
 
         .pixel-input {
-          width: 100%;
-          padding: 12px 16px;
-          border: 3px solid #1C1917;
-          border-radius: 6px;
-          font-family: 'Pixelify Sans', sans-serif;
-          font-size: 16px;
-          background: #fff;
-          color: #1C1917;
-          outline: none;
-          transition: box-shadow 0.2s;
+          width: 100%; padding: 12px 16px; border: 3px solid #1C1917; border-radius: 4px;
+          font-family: 'Pixelify Sans', sans-serif; font-weight: 700; font-size: 16px;
+          background: #fff; color: #1C1917; outline: none; transition: box-shadow 0.2s;
         }
-        .pixel-input:focus { box-shadow: 0 0 0 3px rgba(244,114,182,0.3); }
+        .pixel-input:focus { box-shadow: 0 0 0 3px rgba(255, 143, 0, 0.4); }
 
-        .tab-btn {
-          padding: 10px 20px;
-          border: 3px solid #1C1917;
-          border-radius: 6px;
-          font-family: 'Pixelify Sans', sans-serif;
-          font-size: 13px; font-weight: 700;
-          cursor: pointer;
-          transition: all 0.1s;
-          background: #fff; color: #1C1917;
-        }
-        .tab-btn.active { background: #f472b6; color: #fff; box-shadow: 3px 3px 0 #1C1917; }
-        .tab-btn:hover:not(.active) { background: #fce7f3; }
-
-        .progress-bar-track {
-          width: 100%; height: 28px;
-          background: #f3f4f6;
-          border: 3px solid #1C1917;
-          border-radius: 20px;
-          overflow: hidden;
-          position: relative;
-        }
-        .progress-bar-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #f472b6, #fbbf24);
-          border-radius: 20px;
-          transition: width 1.2s cubic-bezier(.4,0,.2,1);
-          position: relative;
-          overflow: hidden;
-        }
-        .progress-bar-fill::after {
-          content: '';
-          position: absolute; inset: 0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-          background-size: 200% 100%;
-          animation: shimmer 2s infinite;
-        }
+        .progress-bar-track { width: 100%; height: 28px; background: #fff; border: 3px solid #1C1917; border-radius: 4px; overflow: hidden; position: relative; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #E65100, #FFCA28); border-right: 3px solid #1C1917; transition: width 1s cubic-bezier(.4,0,.2,1); position: relative; overflow: hidden; }
+        .progress-bar-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
         @keyframes shimmer { 0%{background-position:-200% center}100%{background-position:200% center} }
-
-        .stat-mini {
-          background: #fff;
-          border: 3px solid #1C1917;
-          box-shadow: 4px 4px 0 #1C1917;
-          border-radius: 8px;
-          padding: 16px;
-          text-align: center;
-        }
-        .history-row {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 12px 16px;
-          border-bottom: 2px solid #fce7f3;
-          transition: background 0.15s;
-        }
-        .history-row:hover { background: #fff0f5; }
-        .history-row:last-child { border-bottom: none; }
-
+        
         @keyframes slideUp { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
         .animate-up { animation: slideUp 0.4s ease both; }
+
+        .history-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 2px dotted #e5e7eb; transition: background 0.15s; }
+        .history-row:hover { background: #fefce8; }
+        .history-row:last-child { border-bottom: none; }
       `}</style>
 
       <CoinBurst active={coinBurst} />
 
       {/* NAVBAR */}
       <nav style={{
-        background: '#fff0f5',
+        background: '#FFFDE7',
         borderBottom: '4px solid #1C1917',
         padding: '0 28px', height: 62,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         position: 'sticky', top: 0, zIndex: 100,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 28 }}>🐷</span>
+          <span style={{ fontSize: 28 }}>🏦</span>
           <div>
-            <div style={{ fontFamily: "'Pixelify Sans'", fontSize: 17, fontWeight: 700, color: '#1C1917' }}>Celengan Babi</div>
-            <div style={{ fontSize: 11, color: '#e879a0' }}>Savings Tracker — WangkuAI</div>
+            <div style={{ fontFamily: "'Pixelify Sans'", fontSize: 17, fontWeight: 700, color: '#1C1917' }}>Brankas Uang</div>
+            <div style={{ fontSize: 11, color: '#E65100' }}>Savings Tracker — WangkuAI</div>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
@@ -422,16 +291,16 @@ export default function SavingsPage() {
             padding: '7px 16px', fontSize: 13, fontWeight: 600,
             textDecoration: 'none', background: '#fff',
             color: '#1C1917', border: '3px solid #1C1917',
-            boxShadow: '3px 3px 0 #1C1917', borderRadius: 6,
+            boxShadow: '3px 3px 0 #1C1917', borderRadius: 4,
           }}>
             📊 Dashboard
           </Link>
           <Link href="/" style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             padding: '7px 16px', fontSize: 13, fontWeight: 600,
-            textDecoration: 'none', background: '#f472b6',
+            textDecoration: 'none', background: '#FF8F00',
             color: '#fff', border: '3px solid #1C1917',
-            boxShadow: '3px 3px 0 #1C1917', borderRadius: 6,
+            boxShadow: '3px 3px 0 #1C1917', borderRadius: 4,
           }}>
             💬 Chat
           </Link>
@@ -454,346 +323,153 @@ export default function SavingsPage() {
         </div>
       )}
 
-      <div className="sav-page">
+      <div className="scroll-wrapper">
+        <div className="sav-page">
 
-        {/* HEADER */}
-        <div style={{ textAlign: 'center', marginBottom: 32 }} className="animate-up">
-          <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 22, color: '#1C1917', marginBottom: 8 }}>
-            🐷 Celengan Babi
-          </h1>
-          <p style={{ color: '#e879a0', fontSize: 14 }}>
-            Simpan uang dari saldo & pantau progress target tabunganmu
-          </p>
-          {data && (
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 12,
-              background: '#fff', border: '3px solid #1C1917',
-              boxShadow: '3px 3px 0 #1C1917', borderRadius: 8, padding: '8px 20px',
-            }}>
-              <span style={{ fontSize: 12, color: '#1C1917', fontWeight: 600 }}>💰 Saldo Tersedia:</span>
-              <span style={{ fontFamily: "'Press Start 2P'", fontSize: 12, color: '#16a34a', fontWeight: 800 }}>
-                {formatRp(data.balance)}
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* MAIN GRID */}
-        <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 24, marginBottom: 24 }}>
-
-          {/* LEFT — Piggy Bank Visual */}
-          <div className="pixel-card-pink animate-up" style={{ padding: 28, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-            <PiggyBank pct={pct} jiggle={jiggle} />
-
-            {/* Progress bar */}
-            <div style={{ width: '100%' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#1C1917' }}>Progress</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#f472b6' }}>{Math.round(pct)}%</span>
-              </div>
-              <div className="progress-bar-track">
-                <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
-              </div>
-            </div>
-
-            {/* Saved / Goal */}
-            <div style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              {[
-                { label: '🏦 Tersimpan', value: data ? formatRp(data.saved) : '-', color: '#16a34a' },
-                { label: '🎯 Target', value: data?.goal ? formatRp(data.goal) : 'Belum diset', color: '#e879a0' },
-              ].map((s, i) => (
-                <div key={i} className="stat-mini">
-                  <div style={{ fontSize: 10, color: '#6b7280', fontWeight: 600, marginBottom: 4 }}>{s.label}</div>
-                  <div style={{ fontFamily: "'Press Start 2P'", fontSize: 10, color: s.color, fontWeight: 800, lineHeight: 1.4 }}>{s.value}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Remaining info */}
-            {data && data.goal > 0 && remaining > 0 && (
-              <div style={{
-                width: '100%', background: '#fff',
-                border: '3px solid #fbbf24', borderRadius: 8,
-                padding: '12px 16px', textAlign: 'center',
-              }}>
-                <div style={{ fontSize: 11, color: '#92400e', fontWeight: 700 }}>
-                  ⏳ Kurang {formatRp(remaining)}
-                </div>
-                {perDay > 0 && (
-                  <div style={{ fontSize: 10, color: '#b45309', marginTop: 4 }}>
-                    ~${formatRp(perDay)}/hari selama {daysLeft} hari
-                  </div>
-                )}
-              </div>
-            )}
-
-            {data && data.goal > 0 && remaining === 0 && (
-              <div style={{
-                width: '100%', background: '#dcfce7',
-                border: '3px solid #16a34a', borderRadius: 8,
-                padding: '14px', textAlign: 'center',
-              }}>
-                <div style={{ fontSize: 18 }}>🎉</div>
-                <div style={{ fontFamily: "'Press Start 2P'", fontSize: 10, color: '#15803d', marginTop: 4 }}>
-                  GOAL TERCAPAI!
-                </div>
-              </div>
-            )}
+          {/* HEADER */}
+          <div style={{ textAlign: 'center', marginBottom: 40 }} className="animate-up">
+            <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 24, color: '#1C1917', marginBottom: 12 }}>
+              🏦 BRANKAS TABUNGAN
+            </h1>
+            <p style={{ color: '#E65100', fontSize: 16, fontFamily: "'Pixelify Sans'", fontWeight: 600 }}>
+              Pantau aset dan setorkan tabunganmu dengan mudah
+            </p>
           </div>
 
-          {/* RIGHT — Actions */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div className="main-grid">
 
-            {/* Tab buttons */}
-            <div style={{ display: 'flex', gap: 8 }} className="animate-up">
-              {([
-                { key: 'deposit', label: '🐷 Setor Tabungan' },
-                { key: 'goal', label: '🎯 Set Target' },
-                { key: 'history', label: '📋 Riwayat' },
-              ] as const).map(t => (
-                <button
-                  key={t.key}
-                  className={`tab-btn ${activeTab === t.key ? 'active' : ''}`}
-                  onClick={() => setActiveTab(t.key)}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-
-            {/* TAB: Deposit */}
-            {activeTab === 'deposit' && (
-              <div className="pixel-card animate-up" style={{ padding: 28 }}>
-                <h2 style={{ fontFamily: "'Pixelify Sans'", fontSize: 18, color: '#1C1917', marginBottom: 6 }}>
-                  🐷 Setor ke Celengan
-                </h2>
-                <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 24 }}>
-                  Uang akan dipotong dari saldo kamu dan masuk ke celengan babi. 
-                  Kamu juga bisa ketik <code style={{ background:'#fce7f3', padding:'2px 6px', borderRadius:4, color:'#e879a0' }}>"simpan 50rb ke tabungan"</code> di chat!
-                </p>
-
-                <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#1C1917', marginBottom: 8 }}>
-                    Nominal Tabungan
-                  </label>
-                  <div style={{ display: 'flex', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
-                    {[10000, 25000, 50000, 100000].map(q => (
-                      <button
-                        key={q}
-                        onClick={() => setDepositInput(String(q))}
-                        style={{
-                          padding: '6px 14px', fontSize: 12, fontWeight: 700,
-                          border: '2px solid #1C1917', borderRadius: 6,
-                          background: depositInput === String(q) ? '#f472b6' : '#fff',
-                          color: depositInput === String(q) ? '#fff' : '#1C1917',
-                          cursor: 'pointer', transition: 'all 0.1s',
-                        }}
-                      >
-                        {formatRp(q)}
-                      </button>
-                    ))}
-                  </div>
-                  <input
-                    type="number"
-                    className="pixel-input"
-                    placeholder="Atau ketik nominal sendiri, misal: 75000"
-                    value={depositInput}
-                    onChange={e => setDepositInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleDeposit()}
-                    id="deposit-amount"
-                  />
-                  {depositInput && parseInt(depositInput) > 0 && (
-                    <div style={{ marginTop: 8, fontSize: 13, color: '#e879a0', fontWeight: 700 }}>
-                      = {formatRp(parseInt(depositInput) || 0)}
-                    </div>
-                  )}
+            {/* LEFT COLUMN: Visual & Stats */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              
+              {/* Saldo Warning/Info */}
+              {data && (
+                <div className="pixel-card animate-up" style={{ padding: '16px 20px', background:'#DBEAFE', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color:'#0369A1' }}>Saldo Tersedia</span>
+                  <span style={{ fontFamily:"'Press Start 2P'", fontSize: 12, color:'#0284C7' }}>{formatRp(data.balance)}</span>
                 </div>
+              )}
 
-                <button
-                  className="pixel-btn pixel-btn-pink"
-                  onClick={handleDeposit}
-                  disabled={depositLoading || !depositInput}
-                  id="deposit-btn"
-                >
-                  {depositLoading ? '⏳ Menyimpan…' : '🐷 Simpan ke Celengan!'}
-                </button>
-              </div>
-            )}
-
-            {/* TAB: Set Goal */}
-            {activeTab === 'goal' && (
-              <div className="pixel-card animate-up" style={{ padding: 28 }}>
-                <h2 style={{ fontFamily: "'Pixelify Sans'", fontSize: 18, color: '#1C1917', marginBottom: 6 }}>
-                  🎯 Set Target Tabungan
-                </h2>
-                <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 24 }}>
-                  Tentukan berapa yang ingin kamu tabung bulan ini. Target baru akan menggantikan yang lama.
-                  Kamu juga bisa bilang <code style={{ background:'#fce7f3', padding:'2px 6px', borderRadius:4, color:'#e879a0' }}>"aku mau nabung 1 juta bulan ini"</code> di chat!
-                </p>
-
-                {data?.goal ? (
-                  <div style={{
-                    background: '#fff0f5', border: '3px solid #f9a8d4',
-                    borderRadius: 8, padding: '14px 20px', marginBottom: 20,
-                    display: 'flex', alignItems: 'center', gap: 12,
-                  }}>
-                    <span style={{ fontSize: 24 }}>🎯</span>
-                    <div>
-                      <div style={{ fontSize: 12, color: '#6b7280' }}>Target saat ini</div>
-                      <div style={{ fontFamily: "'Press Start 2P'", fontSize: 13, color: '#e879a0', fontWeight: 800 }}>
-                        {formatRp(data.goal)}
-                      </div>
-                    </div>
+              {/* Vault & Progress */}
+              <div className="pixel-card-yellow animate-up" style={{ padding: '32px 24px', textAlign: 'center' }}>
+                <RetroVault pct={pct} jiggle={jiggle} />
+                
+                <div style={{ marginTop: 24 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#1C1917' }}>Progress Tabungan</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#E65100' }}>{pct.toFixed(0)}%</span>
                   </div>
-                ) : (
-                  <div style={{ background: '#fef9c3', border: '3px solid #fcd34d', borderRadius: 8, padding: '12px 16px', marginBottom: 20 }}>
-                    <span style={{ fontSize: 13, color: '#92400e' }}>⚠️ Belum ada target tabungan. Yuk set sekarang!</span>
+                  <div className="progress-bar-track" style={{ height: 24 }}>
+                    <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
+                  </div>
+                </div>
+                
+                {data && data.goal > 0 && remaining > 0 && (
+                  <div style={{ marginTop: 16, fontSize: 13, fontWeight: 700, color: '#92400e', background: '#FEF3C7', border: '2px solid #E65100', borderRadius: 4, padding: '8px' }}>
+                    ⏳ Kurang {formatRp(remaining)}
                   </div>
                 )}
-
-                <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#1C1917', marginBottom: 8 }}>
-                    Target Tabungan Bulan Ini
-                  </label>
-                  <div style={{ display: 'flex', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
-                    {[250000, 500000, 1000000, 2000000].map(q => (
-                      <button
-                        key={q}
-                        onClick={() => setGoalInput(String(q))}
-                        style={{
-                          padding: '6px 14px', fontSize: 12, fontWeight: 700,
-                          border: '2px solid #1C1917', borderRadius: 6,
-                          background: goalInput === String(q) ? '#fbbf24' : '#fff',
-                          color: '#1C1917', cursor: 'pointer', transition: 'all 0.1s',
-                        }}
-                      >
-                        {formatRp(q)}
-                      </button>
-                    ))}
+                {data && data.goal > 0 && remaining === 0 && (
+                  <div style={{ marginTop: 16, fontSize: 13, fontWeight: 700, color: '#166534', background: '#DCFCE7', border: '2px solid #16A34A', borderRadius: 4, padding: '8px' }}>
+                    🎉 GOAL TERCAPAI!
                   </div>
-                  <input
-                    type="number"
-                    className="pixel-input"
-                    placeholder="Misal: 1000000"
-                    value={goalInput}
-                    onChange={e => setGoalInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleSetGoal()}
-                    id="goal-amount"
-                  />
-                  {goalInput && parseInt(goalInput) > 0 && (
-                    <div style={{ marginTop: 8, fontSize: 13, color: '#92400e', fontWeight: 700 }}>
-                      = {formatRp(parseInt(goalInput) || 0)}
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  className="pixel-btn pixel-btn-yellow"
-                  onClick={handleSetGoal}
-                  disabled={goalLoading || !goalInput}
-                  id="set-goal-btn"
-                >
-                  {goalLoading ? '⏳ Menyimpan…' : '🎯 Set Target Tabungan!'}
-                </button>
+                )}
               </div>
-            )}
 
-            {/* TAB: History */}
-            {activeTab === 'history' && (
-              <div className="pixel-card animate-up" style={{ overflow: 'hidden' }}>
-                <div style={{
-                  padding: '18px 24px',
-                  borderBottom: '4px solid #1C1917',
-                  background: 'linear-gradient(90deg, #fff0f5 0%, #fff 100%)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                }}>
-                  <div>
-                    <div style={{ fontFamily: "'Pixelify Sans'", fontSize: 16, fontWeight: 700 }}>📋 Riwayat Setoran</div>
-                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>Semua uang yang masuk ke celengan</div>
-                  </div>
-                  <div style={{
-                    background: '#f472b6', color: '#fff',
-                    fontFamily: "'Press Start 2P'", fontSize: 10,
-                    padding: '6px 12px', borderRadius: 6,
-                    border: '2px solid #1C1917',
-                  }}>
-                    {data?.history.length ?? 0} txn
-                  </div>
+              {/* Stat cards 2x2 */}
+              {data && (
+                <div className="animate-up" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <StatBox icon="🏦" label="Tersimpan" val={formatRp(data.saved)} color="#16a34a" />
+                  <StatBox icon="🎯" label="Target" val={data.goal ? formatRp(data.goal) : 'Belum'} color="#E65100" />
+                  <StatBox icon="⏳" label="Sisa Hari" val={`${daysLeft} Hari`} color="#f59e0b" />
+                  <StatBox icon="📈" label="Per Hari" val={perDay ? formatRp(perDay) : '-'} color="#9333ea" />
                 </div>
+              )}
+            </div>
 
-                {data && data.history.length > 0 ? (
-                  <div style={{ maxHeight: 360, overflowY: 'auto' }}>
-                    {data.history.map((tx, i) => (
-                      <div key={tx.id} className="history-row" style={{ animationDelay: `${i * 0.04}s` }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{
-                            width: 36, height: 36, borderRadius: 8,
-                            background: 'linear-gradient(135deg, #f9a8d4, #f472b6)',
-                            border: '2px solid #1C1917',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: 18,
-                          }}>🪙</div>
+            {/* RIGHT COLUMN: Actions vertically stacked */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              
+              {/* Form 1: Setor Uang */}
+              <div className="pixel-card animate-up" style={{ padding: 24 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1C1917', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  💸 Setor ke Brankas
+                </h2>
+                <p style={{ fontSize: 13, marginBottom: 16 }}>Nominal akan memotong Saldo Tersedia Anda.</p>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                  {[25000, 50000, 100000].map(q => (
+                    <button key={q} onClick={() => setDepositInput(String(q))}
+                      style={{
+                        padding: '6px 12px', fontSize: 12, fontWeight: 700, border: '2px solid #1C1917', borderRadius: 4, cursor: 'pointer',
+                        background: depositInput === String(q) ? '#FF8F00' : '#fff', color: depositInput === String(q) ? '#fff' : '#1C1917',
+                      }}>
+                      {formatRp(q)}
+                    </button>
+                  ))}
+                </div>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <input type="number" className="pixel-input" placeholder="Atau ketik sendiri..." value={depositInput} onChange={e => setDepositInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleDeposit()} />
+                  <button className="pixel-btn pixel-btn-orange" onClick={handleDeposit} disabled={depositLoading || !depositInput} style={{ width: '120px' }}>
+                    {depositLoading ? '...' : 'SETOR'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Form 2: Set Target */}
+              <div className="pixel-card animate-up" style={{ padding: 24, animationDelay: '0.1s' }}>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1C1917', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  🎯 Target Bulan Ini
+                </h2>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                  {[500000, 1000000, 2000000].map(q => (
+                    <button key={q} onClick={() => setGoalInput(String(q))}
+                      style={{
+                        padding: '6px 12px', fontSize: 12, fontWeight: 700, border: '2px solid #1C1917', borderRadius: 4, cursor: 'pointer',
+                        background: goalInput === String(q) ? '#FFCA28' : '#fff', color: '#1C1917',
+                      }}>
+                      {formatRp(q)}
+                    </button>
+                  ))}
+                </div>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <input type="number" className="pixel-input" placeholder="Baru: misal 1000000" value={goalInput} onChange={e => setGoalInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSetGoal()} />
+                  <button className="pixel-btn pixel-btn-yellow" onClick={handleSetGoal} disabled={goalLoading || !goalInput} style={{ width: '120px' }}>
+                    {goalLoading ? '...' : 'UBAH'}
+                  </button>
+                </div>
+              </div>
+
+              {/* History */}
+              <div className="pixel-card animate-up" style={{ flex: 1, display: 'flex', flexDirection: 'column', animationDelay: '0.2s', minHeight: 300 }}>
+                <div style={{ padding: '16px 20px', background: 'linear-gradient(90deg, #FFCA28, #FFFDE7)', borderBottom: '4px solid #1C1917', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h2 style={{ fontSize: 18, fontWeight: 700, color: '#1C1917', margin: 0 }}>📋 Riwayat</h2>
+                  <div style={{ fontSize: 11, background: '#1C1917', color: '#FFCA28', padding: '4px 8px', borderRadius: 4, fontFamily: "'Press Start 2P'" }}>{data?.history.length ?? 0} Txn</div>
+                </div>
+                
+                <div style={{ overflowY: 'auto', flex: 1 }}>
+                  {data && data.history.length > 0 ? (
+                    data.history.map((tx) => (
+                      <div key={tx.id} className="history-row">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                          <div style={{ width: 32, height: 32, borderRadius: 4, background: '#E65100', border: '2px solid #1C1917', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, boxShadow: '2px 2px 0 #1C1917' }}>🪙</div>
                           <div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: '#1C1917' }}>{tx.description || 'Simpan ke celengan'}</div>
-                            <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>{formatDate(tx.date)}</div>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: '#1C1917' }}>{tx.description || 'Simpan ke brankas'}</div>
+                            <div style={{ fontSize: 11, color: '#6b7280', marginTop: 2 }}>{formatDate(tx.date)}</div>
                           </div>
                         </div>
-                        <div style={{ fontFamily: "'Press Start 2P'", fontSize: 11, color: '#16a34a', fontWeight: 800 }}>
+                        <div style={{ fontFamily: "'Press Start 2P'", fontSize: 10, color: '#16a34a' }}>
                           +{formatRp(tx.amount)}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ padding: '48px 24px', textAlign: 'center' }}>
-                    <div style={{ fontSize: 48, marginBottom: 12 }}>🐷</div>
-                    <div style={{ fontFamily: "'Pixelify Sans'", fontSize: 14, color: '#9ca3af' }}>
-                      Belum ada setoran ke celengan.<br />Yuk mulai menabung sekarang!
-                    </div>
-                  </div>
-                )}
+                    ))
+                  ) : (
+                    <div style={{ padding: '40px 20px', textAlign: 'center', color: '#666' }}>Belum ada setoran.</div>
+                  )}
+                </div>
               </div>
-            )}
 
-            {/* Tip box */}
-            <div style={{
-              background: '#fffbeb', border: '3px solid #fcd34d',
-              borderRadius: 8, padding: '16px 20px',
-            }} className="animate-up">
-              <div style={{ fontWeight: 700, fontSize: 13, color: '#92400e', marginBottom: 6 }}>💡 Cara Menabung via Chat:</div>
-              <div style={{ fontSize: 12, color: '#78350f', lineHeight: 1.8 }}>
-                Kamu bisa langsung bilang ke MinoAI di chat:<br />
-                <code style={{ background: '#fef3c7', padding: '2px 6px', borderRadius: 4 }}>"simpan 50rb ke tabungan"</code><br />
-                <code style={{ background: '#fef3c7', padding: '2px 6px', borderRadius: 4 }}>"tabung 100 ribu dari saldo"</code><br />
-                <code style={{ background: '#fef3c7', padding: '2px 6px', borderRadius: 4 }}>"masukin 200rb ke celengan"</code>
-              </div>
             </div>
-
           </div>
         </div>
-
-        {/* BOTTOM — Stats summary */}
-        {data && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }} className="animate-up">
-            {[
-              { icon: '🐷', label: 'Total Tersimpan', value: formatRp(data.saved), color: '#16a34a' },
-              { icon: '🎯', label: 'Target Bulan Ini', value: data.goal ? formatRp(data.goal) : '—', color: '#e879a0' },
-              { icon: '⏳', label: 'Sisa Hari', value: `${daysLeft} hari`, color: '#f59e0b' },
-              { icon: '💰', label: 'Saldo Tersedia', value: formatRp(data.balance), color: '#0ea5e9' },
-            ].map((s, i) => (
-              <div key={i} style={{
-                background: '#fff', border: '4px solid #1C1917',
-                boxShadow: '5px 5px 0 #1C1917', borderRadius: 8,
-                padding: '18px 16px', textAlign: 'center',
-              }}>
-                <div style={{ fontSize: 28, marginBottom: 8 }}>{s.icon}</div>
-                <div style={{ fontSize: 10, color: '#6b7280', fontWeight: 600, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
-                <div style={{ fontFamily: "'Press Start 2P'", fontSize: 11, color: s.color, fontWeight: 800, lineHeight: 1.5 }}>{s.value}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
       </div>
     </>
   );

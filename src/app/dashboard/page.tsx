@@ -441,63 +441,61 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
-        {/* LINK KE TABUNGAN */}
-        <div style={{ marginBottom:'24px', animationDelay:'.35s' }}>
+        {/* MENU NAVIGATION (REPLACING SIDEBAR) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '16px', animationDelay: '.35s' }} className="animate-up">
+
           <Link href="/dashboard/savings" style={{ display:'block', textDecoration:'none' }}>
-            <div className="glass-card table-link-card" style={{ padding:'26px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', transition:'all 0.3s ease', cursor:'pointer', background: 'linear-gradient(to right, #fce7f3, #fbcfe8)', borderColor: '#f472b6' }}>
+            <div className="stat-card menu-btn" style={{ background: '#FFCA28', padding: '24px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display:'flex', alignItems:'center', gap:'20px' }}>
-                <div style={{ fontSize: '32px' }}>🐷</div>
+                <div style={{ fontSize: '42px', filter: 'drop-shadow(3px 3px 0 rgba(0,0,0,0.15))' }}>🏦</div>
                 <div>
-                  <h3 style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize:'20px', color:'#9d174d', marginBottom:'4px' }}>Celengan Babi (Tabungan)</h3>
-                  <p style={{ fontSize:'13px', color:'#be185d', margin:0 }}>Simpan uang, set target tabungan bulan ini, dan pantau progress sisa uangmu secara visual.</p>
+                  <h3 style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize:'22px', color:'#1C1917', marginBottom:'6px', fontWeight: 700 }}>Brankas Tabungan</h3>
+                  <p style={{ fontSize:'14px', color:'#1C1917', margin:0, fontWeight: 500, fontFamily: "'Pixelify Sans'" }}>Simpan uang, set target tabungan bulan ini, dan pantau progress secara visual.</p>
                 </div>
               </div>
-              <div style={{ width:'40px', height:'40px', borderRadius:'50%', background:'white', display:'flex', alignItems:'center', justifyContent:'center', color:'#f472b6', fontSize:'18px', border: '3px solid #f472b6', boxShadow: '3px 3px 0px #f472b6' }}>
+              <div style={{ width:'48px', height:'48px', borderRadius:'8px', background:'#1C1917', display:'flex', alignItems:'center', justifyContent:'center', color:'#FFCA28', fontSize:'24px', border: '3px solid #1C1917', boxShadow: 'inset -2px -2px 0 rgba(255,255,255,0.2)' }}>
                 →
               </div>
             </div>
           </Link>
-        </div>
 
-        {/* LINK KE TABEL INTENT & KATEGORI */}
-        <div style={{ marginBottom:'24px', animationDelay:'.4s' }}>
           <Link href="/dashboard/transactions" style={{ display:'block', textDecoration:'none' }}>
-            <div className="glass-card table-link-card" style={{ padding:'26px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', transition:'all 0.3s ease', cursor:'pointer' }}>
+            <div className="stat-card menu-btn" style={{ background: '#FF8F00', padding: '24px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display:'flex', alignItems:'center', gap:'20px' }}>
+                 <div style={{ fontSize: '42px', filter: 'drop-shadow(3px 3px 0 rgba(0,0,0,0.15))' }}>📊</div>
                 <div>
-                  <h3 style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize:'20px', color:'#1C1917', marginBottom:'4px' }}>Tabel Intent & Kategori Lengkap</h3>
-                  <p style={{ fontSize:'13px', color:'#1C1917', margin:0 }}>Lihat riwayat lengkap transaksi, filter kategori NLP, dan download laporan sebagai CSV.</p>
+                  <h3 style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize:'22px', color:'#1C1917', marginBottom:'6px', fontWeight: 700 }}>Tabel Intent & Riwayat</h3>
+                  <p style={{ fontSize:'14px', color:'#1C1917', margin:0, fontWeight: 500, fontFamily: "'Pixelify Sans'" }}>Lihat riwayat lengkap transaksi, filter kategori, dan download CSV.</p>
                 </div>
               </div>
-              <div style={{ width:'40px', height:'40px', borderRadius:'50%', background:'white', display:'flex', alignItems:'center', justifyContent:'center', color:'#1C1917', fontSize:'18px', border: '3px solid #1C1917', boxShadow: '3px 3px 0px #1C1917' }}>
+              <div style={{ width:'48px', height:'48px', borderRadius:'8px', background:'#1C1917', display:'flex', alignItems:'center', justifyContent:'center', color:'#FF8F00', fontSize:'24px', border: '3px solid #1C1917', boxShadow: 'inset -2px -2px 0 rgba(255,255,255,0.2)' }}>
                 →
               </div>
             </div>
           </Link>
-          <style>{`
-            .table-link-card:hover {
-              transform: translateY(-2px);
-              box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-              background: #ffffff;
-            }
-          `}</style>
-        </div>
 
-        {/* TX LINK */}
-        <div style={{ marginBottom:'24px', animationDelay:'.5s' }}>
           <Link href="/" style={{ display:'block', textDecoration:'none' }}>
-            <div className="glass-card table-link-card" style={{ padding:'26px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', transition:'all 0.3s ease', cursor:'pointer' }}>
+            <div className="stat-card menu-btn" style={{ background: '#FFFDE7', padding: '24px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display:'flex', alignItems:'center', gap:'20px' }}>
+                 <div style={{ fontSize: '42px', filter: 'drop-shadow(3px 3px 0 rgba(0,0,0,0.1))' }}>💬</div>
                 <div>
-                  <h3 style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize:'20px', color:'#1C1917', marginBottom:'4px' }}>Kembali ke Chat WangkuAI</h3>
-                  <p style={{ fontSize:'13px', color:'#1C1917', margin:0 }}>Kembali ke menu utama untuk mencatat pengeluaran dan melihat saldo.</p>
+                  <h3 style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize:'22px', color:'#1C1917', marginBottom:'6px', fontWeight: 700 }}>Kembali ke Chat</h3>
+                  <p style={{ fontSize:'14px', color:'#1C1917', margin:0, fontWeight: 500, fontFamily: "'Pixelify Sans'" }}>Kembali ke layar utama untuk chat dengan AI dan mencatat transaksi.</p>
                 </div>
               </div>
-              <div style={{ width:'40px', height:'40px', borderRadius:'50%', background:'white', display:'flex', alignItems:'center', justifyContent:'center', color:'#10b981', fontSize:'18px', border: '3px solid #1C1917', boxShadow: '3px 3px 0px #1C1917' }}>
-                →
+              <div style={{ width:'48px', height:'48px', borderRadius:'8px', background:'#1C1917', display:'flex', alignItems:'center', justifyContent:'center', color:'#FFFDE7', fontSize:'24px', border: '3px solid #1C1917', boxShadow: 'inset -2px -2px 0 rgba(255,255,255,0.2)' }}>
+                ↩
               </div>
             </div>
           </Link>
+
+          <style>{`
+            .menu-btn { cursor: pointer; }
+            .menu-btn:hover { background-color: #E65100 !important; color: white !important; }
+            .menu-btn:hover h3, .menu-btn:hover p { color: white !important; }
+            .menu-btn:hover div[style*="border-radius: 8px"] { color: #E65100 !important; background: white !important; }
+            .animate-up { animation: fadeUp 0.6s ease both; }
+          `}</style>
         </div>
 
       </div>

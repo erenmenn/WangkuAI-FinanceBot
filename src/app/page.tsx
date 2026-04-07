@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Mic, PiggyBank, LayoutDashboard, LogOut, Settings, Mail, Info } from 'lucide-react';
+import { Mic, LayoutDashboard, LogOut, Settings, Mail, Info } from 'lucide-react';
 
 // ─── Utilities ───────────────────────────────────────────────
 const formatRp  = (num: number) => 'Rp ' + Math.floor(num || 0).toLocaleString('id-ID');
@@ -231,11 +231,11 @@ export default function Home() {
 
 
           {/* Budget progress bar */}
-          <div style={{ background: 'rgba(255, 255, 255, 0.5)', border: '1px solid rgba(255,255,255,0.8)', borderRadius: '16px', padding: '16px', marginBottom: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.05)', backdropFilter: 'blur(12px)' }}>
-            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:8 }}>
-              <span style={{ fontSize:13, fontWeight:700, color:'#374151' }}>Budget Harian</span>
+          <div className="glass-card" style={{ background: '#FFFDE7', padding: '16px', marginBottom: '20px' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:8, fontFamily: "'Pixelify Sans', sans-serif" }}>
+              <span style={{ fontSize:16, fontWeight:700, color:'#1C1917' }}>Budget Harian</span>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <span style={{ fontSize:14, fontWeight: 'bold', color: pct >= 100 ? '#ef4444' : pct >= 75 ? '#f59e0b' : '#10b981' }}>
+                <span style={{ fontSize:14, fontWeight: 'bold', fontFamily: "'Press Start 2P', system-ui", color: pct >= 100 ? '#ef4444' : pct >= 75 ? '#f59e0b' : '#10b981' }}>
                   {budgetLimit > 0 ? `${pct.toFixed(0)}%` : '0%'}
                 </span>
                 <button
@@ -249,46 +249,46 @@ export default function Home() {
                       }).then(loadBudget);
                     }
                   }}
-                  style={{ background: '#f3f4f6', border: 'none', borderRadius: '8px', fontSize: '11px', color: '#4b5563', fontWeight: 600, cursor: 'pointer', padding: '4px 8px', transition: 'all 0.2s' }}
-                  onMouseOver={(e) => e.currentTarget.style.background = '#e5e7eb'}
-                  onMouseOut={(e) => e.currentTarget.style.background = '#f3f4f6'}
+                  style={{ background: '#fff', border: '3px solid #1C1917', borderRadius: '4px', fontSize: '11px', fontFamily: "'Pixelify Sans', sans-serif", color: '#1C1917', fontWeight: 700, cursor: 'pointer', padding: '4px 8px', transition: 'all 0.1s', boxShadow: '2px 2px 0 #1C1917' }}
+                  onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = '0px 0px 0 #1C1917'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '2px 2px 0 #1C1917'; }}
                 >
                   Edit
                 </button>
               </div>
             </div>
-            <div style={{ height: '8px', background: 'rgba(0, 0, 0, 0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '14px', background: '#fff', border: '3px solid #1C1917', borderRadius: '4px', overflow: 'hidden' }}>
               <div style={{
                 height: '100%',
                 width: `${pct}%`,
-                background: pct >= 100 ? '#ef4444' : pct >= 75 ? '#f59e0b' : '#10b981',
+                background: pct >= 100 ? '#ef4444' : pct >= 75 ? '#FF8F00' : '#10b981',
                 transition: 'width 0.5s ease',
-                borderRadius: '4px'
+                borderRight: pct > 0 ? '3px solid #1C1917' : 'none'
               }} />
             </div>
-            <div style={{ display:'flex', justifyContent:'space-between', marginTop:8 }}>
-              <span style={{ fontSize:12, color:'#ef4444', fontWeight:600 }}>{formatRp(expense)} dipakai</span>
-              <span style={{ fontSize:12, color:'#6b7280', fontWeight:600 }}>dari {budgetLimit > 0 ? formatRp(budgetLimit) : 'Belum diset'}</span>
+            <div style={{ display:'flex', justifyContent:'space-between', marginTop:8, fontFamily: "'Pixelify Sans', sans-serif" }}>
+              <span style={{ fontSize:14, color:'#ef4444', fontWeight:700 }}>{formatRp(expense)} dipakai</span>
+              <span style={{ fontSize:14, color:'#1C1917', fontWeight:700 }}>dari {budgetLimit > 0 ? formatRp(budgetLimit) : 'Belum diset'}</span>
             </div>
           </div>
 
           {/* Recent Transactions */}
-          <div className="section-label">Transaksi Terbaru</div>
+          <div className="section-label" style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize: 13, color: '#1C1917', fontWeight: 700 }}>Transaksi Terbaru</div>
           <div className="tx-list">
             {transactions.length > 0 ? (
               transactions.slice(0, 6).map((tx, i) => (
-                <div className="tx-item" key={i}>
-                  <div className={`tx-dot ${tx.type}`} />
+                <div className="tx-item" key={i} style={{ fontFamily: "'Pixelify Sans', sans-serif", background: '#FFFDE7', border: '3px solid #1C1917', borderRadius: 4, boxShadow: '2px 2px 0 #1C1917' }}>
+                  <div className={`tx-dot ${tx.type}`} style={{ border: '2px solid #1C1917' }} />
                   <div className="tx-info">
-                    <div className="tx-desc">{tx.description || tx.type}</div>
-                    <div className="tx-amount" style={{ color: tx.type==='income' ? '#10b981' : '#ef4444' }}>
+                    <div className="tx-desc" style={{ fontSize: 14, fontWeight: 700 }}>{tx.description || tx.type}</div>
+                    <div className="tx-amount" style={{ color: tx.type==='income' ? '#065F46' : '#991B1B', fontFamily: "'Press Start 2P', system-ui", fontSize: 10, marginTop: 4 }}>
                       {tx.type==='expense' ? '−' : '+'}{formatRp(tx.amount)}
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <div style={{ fontSize:11, color:'var(--muted)', textAlign:'center', padding:'14px 0' }}>Belum ada transaksi</div>
+              <div style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize: 14, color: '#1C1917', textAlign: 'center', padding: '14px 0', fontWeight: 600 }}>Belum ada transaksi</div>
             )}
           </div>
 
@@ -296,13 +296,13 @@ export default function Home() {
           <div style={{ display:'flex', flexDirection:'column', gap: '10px', marginTop:'auto', paddingTop:'20px' }}>
             
             {/* User Profile / Email */}
-            <div style={{ display:'flex', alignItems:'center', gap: '12px', padding: '12px', background:'rgba(255,255,255,0.4)', borderRadius:'16px', backdropFilter:'blur(10px)', border:'1px solid rgba(255,255,255,0.5)', marginBottom: '4px' }}>
-              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+            <div className="glass-card" style={{ display:'flex', alignItems:'center', gap: '12px', padding: '12px', background:'#FFFDE7', marginBottom: '4px' }}>
+              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: '4px', background: '#3B82F6', border: '3px solid #1C1917', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontFamily: "'Pixelify Sans', sans-serif" }}>
                 {userName.charAt(0).toUpperCase()}
               </div>
-              <div style={{ overflow: 'hidden' }}>
-                <div style={{ fontSize: '13px', fontWeight: 700, color: '#1f2937' }}>{userName}</div>
-                <div style={{ fontSize: '11px', color: '#6b7280', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+              <div style={{ overflow: 'hidden', fontFamily: "'Pixelify Sans', sans-serif" }}>
+                <div style={{ fontSize: '15px', fontWeight: 700, color: '#1C1917' }}>{userName}</div>
+                <div style={{ fontSize: '12px', color: '#1C1917', fontWeight: 500, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                   {session?.user?.email || 'user@example.com'}
                 </div>
               </div>
@@ -312,14 +312,14 @@ export default function Home() {
               href="/voice"
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px',
-                background: 'linear-gradient(135deg, #d946ef 0%, #ec4899 50%, #eab308 100%)',
-                color: '#fff', borderRadius: '14px', textDecoration: 'none', fontWeight: 700, fontSize: '14px',
-                boxShadow: '0 4px 15px rgba(236, 72, 153, 0.3)', transition: 'all 0.2s ease', border: 'none'
+                background: '#E65100',
+                color: '#fff', borderRadius: '4px', textDecoration: 'none', fontFamily: "'Press Start 2P', system-ui", fontSize: '11px',
+                border: '4px solid #1C1917', boxShadow: '4px 4px 0px #1C1917', transition: 'all 0.1s ease', lineHeight: 1.5
               }}
-              onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(236, 72, 153, 0.4)'; }}
-              onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0px)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(236, 72, 153, 0.3)'; }}
+              onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = '2px 2px 0px #1C1917'; }}
+              onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '4px 4px 0px #1C1917'; }}
             >
-              <Mic size={18} /> VOICE AI
+              <Mic size={18} fill="white" /> VOICE AI
             </Link>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -327,30 +327,28 @@ export default function Home() {
                 href="/dashboard/savings"
                 style={{
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                  padding: '12px 6px', background: 'rgba(255, 255, 255, 0.7)', color: '#be185d',
-                  borderRadius: '14px', textDecoration: 'none', fontWeight: 600, fontSize: '12px',
-                  backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.8)', transition: 'all 0.2s ease', 
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.02)'
+                  padding: '12px 6px', background: '#FFCA28', color: '#1C1917',
+                  borderRadius: '4px', textDecoration: 'none', fontFamily: "'Pixelify Sans', sans-serif", fontWeight: 700, fontSize: '14px',
+                  border: '4px solid #1C1917', boxShadow: '4px 4px 0px #1C1917', transition: 'all 0.1s ease'
                 }}
-                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.05)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0px)'; e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.02)'; }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = '2px 2px 0px #1C1917'; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '4px 4px 0px #1C1917'; }}
               >
-                <PiggyBank size={20} /> Celengan
+                <span style={{ fontSize: 24, filter: 'drop-shadow(2px 2px 0 rgba(0,0,0,0.15))' }}>🏦</span> Brankas
               </Link>
 
               <Link
                 href="/dashboard"
                 style={{
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                  padding: '12px 6px', background: 'rgba(255, 255, 255, 0.7)', color: '#0369a1',
-                  borderRadius: '14px', textDecoration: 'none', fontWeight: 600, fontSize: '12px',
-                  backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.8)', transition: 'all 0.2s ease',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.02)'
+                  padding: '12px 6px', background: '#3B82F6', color: '#fff',
+                  borderRadius: '4px', textDecoration: 'none', fontFamily: "'Pixelify Sans', sans-serif", fontWeight: 700, fontSize: '14px',
+                  border: '4px solid #1C1917', boxShadow: '4px 4px 0px #1C1917', transition: 'all 0.1s ease'
                 }}
-                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.05)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0px)'; e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.02)'; }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = '2px 2px 0px #1C1917'; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '4px 4px 0px #1C1917'; }}
               >
-                <LayoutDashboard size={20} /> Dashboard
+                <LayoutDashboard size={22} fill="white" strokeWidth={1} /> Dashboard
               </Link>
             </div>
 
@@ -359,12 +357,12 @@ export default function Home() {
                 href="/settings"
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                  padding: '10px 6px', background: 'rgba(243, 244, 246, 0.8)', color: '#4b5563',
-                  borderRadius: '14px', textDecoration: 'none', fontWeight: 600, fontSize: '13px',
-                  border: '1px solid rgba(229, 231, 235, 0.5)', transition: 'all 0.2s ease'
+                  padding: '10px 6px', background: '#fff', color: '#1C1917',
+                  borderRadius: '4px', textDecoration: 'none', fontFamily: "'Pixelify Sans', sans-serif", fontWeight: 700, fontSize: '14px',
+                  border: '3px solid #1C1917', boxShadow: '3px 3px 0px #1C1917', transition: 'all 0.1s ease'
                 }}
-                onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(229, 231, 235, 0.9)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(243, 244, 246, 0.8)'; }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = '1px 1px 0px #1C1917'; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '3px 3px 0px #1C1917'; }}
               >
                 <Settings size={16} /> Setting
               </Link>
@@ -373,12 +371,13 @@ export default function Home() {
                 onClick={() => signOut({ callbackUrl: '/auth/login' })}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                  padding: '10px 6px', background: 'rgba(254, 226, 226, 0.8)', color: '#dc2626',
-                  borderRadius: '14px', border: '1px solid rgba(252, 165, 165, 0.5)',
-                  fontWeight: 600, fontSize: '13px', cursor: 'pointer', transition: 'all 0.2s ease'
+                  padding: '10px 6px', background: '#ef4444', color: '#fff',
+                  borderRadius: '4px', border: '3px solid #1C1917', cursor: 'pointer',
+                  fontFamily: "'Pixelify Sans', sans-serif", fontWeight: 700, fontSize: '14px',
+                  boxShadow: '3px 3px 0px #1C1917', transition: 'all 0.1s ease'
                 }}
-                onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(252, 165, 165, 0.8)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(254, 226, 226, 0.8)'; }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = '1px 1px 0px #1C1917'; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '3px 3px 0px #1C1917'; }}
               >
                 <LogOut size={16} /> Keluar
               </button>

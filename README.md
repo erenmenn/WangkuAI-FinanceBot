@@ -373,47 +373,159 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 
 ---
 
-## 🏗️ Arsitektur
+## 🏗️ Arsitektur Sistem
+
+### Diagram Alur Lengkap
 
 ```
- Browser (Next.js UI)
-        │  HTTP/JSON
-        ▼
- ┌──────────────────────────────────────┐
- │         Next.js API Routes           │
- │                                      │
- │  /api/chat      ← otak chatbot v2    │
- │  /api/stats/*   ← data dashboard     │
- │  /api/balance   ← manajemen saldo    │
- │  /api/budget    ← limit & goal       │
- │  /api/auth/*    ← NextAuth login     │
- └──────────┬───────────────────────────┘
-            │
-     ┌──────┴──────┐
-     ▼             ▼
- ┌─────────┐   ┌────────────────────────────┐
- │ Gemini  │   │       Prisma ORM           │
- │ 2.5     │   │                            │
- │ Flash   │   │  User, Balance             │
- │         │   │  Transaction               │
- │ Intent  │   │  BudgetLimit (limit+goal)  │
- │ Parser  │   │  ChatHistory               │
- │    +    │   │                            │
- │ 19      │   │  SQLite / Postgres         │
- │ Handler │   │                            │
- └─────────┘   └────────────────────────────┘
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          👤  USER INPUT                                      ║
+║              💬 Text: "beli kopi 15rb"  |  🎤 Voice: TTS + STT              ║
+╚══════════════════════════════╤═══════════════════════════════════════════════╝
+                               │  HTTP POST /api/chat
+                               ▼
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           🔐  API GATEWAY — Next.js Route Handler                            ║
+║              NextAuth.js JWT · Session Validation · userId extraction        ║
+╚═════════════════════╤════════════════════════════════════════════════════════╝
+                      │
+          ┌───────────┴──────────┐
+          ▼                      ▼
+╔═════════════════╗   ╔══════════════════════════════════════════╗
+║  🤗 IndoBERT    ║   ║  📐 Rule-Based Regex Engine (Fallback)   ║
+║  HuggingFace    ║   ║                                          ║
+║  Zero-Shot NLI  ║   ║  ├─ Intent Rules  (20 regex patterns)   ║
+║                 ║   ║  ├─ Amount Parser (50rb / 3@12000 / jt) ║
+║  12 hypothesis  ║   ║  ├─ Date Extractor (kemarin / 15 maret) ║
+║  confidence>0.25║   ║  └─ Category Matcher (25+ keyword banks)║
+╚════════╤════════╝   ╚═════════════════════════╤════════════════╝
+         └──────────────────┬──────────────────┘
+                            │  merged intent signal
+                            ▼
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           🧠  GEMINI 2.5 FLASH — Structured Intent Parser                    ║
+║                                                                              ║
+║  Input : raw user message + current balance                                  ║
+║  Output: { intent, transactions[], replyText, goalAmount,                    ║
+║            depositAmount, dateStr, startDate, endDate,                       ║
+║            limitAmount, balanceAmount, isMixed }                             ║
+║  Config: temperature=0.1  (deterministic, akurasi tinggi)                    ║
+╚══════════════════════════════╤═══════════════════════════════════════════════╝
+                               │ parsed JSON
+                               ▼
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              ⚡  INTENT ROUTER — 20 Handler Branches                         ║
+╠════════════════════════════════════╦═════════════════════════════════════════╣
+║  CORE INTENTS (12)                 ║  ANALYTICS v2.0 (8 NEW)                 ║
+║                                    ║                                          ║
+║  💸 transaction                    ║  📊 insight_category_spending            ║
+║     → insert DB + update balance   ║     → aggregate by category, rank,       ║
+║     → budget alert (80%/100%)      ║       progress bar + contextual advice   ║
+║     → auto anomaly check           ║                                          ║
+║     → follow-up hook               ║  🧠 financial_health_check               ║
+║                                    ║     → persona classifier (4 types)       ║
+║  💰 income / 🔀 mixed              ║     → saving rate + burn rate            ║
+║     → split income vs expense      ║     → 3 bullet traits + advice           ║
+║     → both recorded in 1 message   ║                                          ║
+║                                    ║  🔮 spending_prediction                  ║
+║  💳 check_balance                  ║     → daysToEmpty = balance÷burnRate     ║
+║     → status rule: <50k=🔴,        ║     → end-of-month projection            ║
+║       <200k=🟡, else=🟢            ║     → goal integration                   ║
+║                                    ║                                          ║
+║  📆 check_month                    ║  📉 comparison_period                    ║
+║     → aggregate this month         ║     → /bulan/ regex → monthly mode       ║
+║     → income, expense, net         ║     → diff + % + biggest growth cat      ║
+║                                    ║                                          ║
+║  📅 check_today / 🗓️ check_date   ║  🎯 set_goal + 📈 goal_tracking          ║
+║     → query by today / dateStr     ║     → save to BudgetLimit table          ║
+║                                    ║     → progress bar + days remaining      ║
+║  📊 check_range                    ║     → perDay = needed÷daysLeft           ║
+║     → query startDate → endDate    ║                                          ║
+║                                    ║  💡 recommendation_engine                ║
+║  📋 check_history                  ║     → rule-based: if makanan>35% → tip   ║
+║     → last 10 transactions         ║     → if minuman>15% → tip               ║
+║                                    ║     → if belanja>200k → tip              ║
+║  🎯 set_limit / ⚙️ set_balance    ║     → burn rate reduction suggestion     ║
+║     → save to BudgetLimit table    ║                                          ║
+║                                    ║  🚨 anomaly_detection                    ║
+║  🗑️ clear_today                   ║     → baseline = avg 14 days expense     ║
+║     → delete today's records       ║     → spike = (today-base)/base×100      ║
+║                                    ║     → alert if spike ≥ 150%             ║
+║  💡 knowledge (fallback)           ║     → identify top cause category        ║
+║     → Gemini replyText only        ║                                          ║
+╚════════════════════════════════════╩═════════════════════════════════════════╝
+                               │
+                               ▼
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              🔧  RULE-BASED LOGIC ENGINES                                    ║
+╠══════════════════╦══════════════════╦═══════════════╦════════════════════════╣
+║ 💰 Persona       ║ 🔮 Burn Rate     ║ 📊 Category   ║ 🚨 Anomaly Engine     ║
+║ Classifier       ║ Engine           ║ Aggregator    ║                        ║
+║                  ║                  ║               ║ baseline =             ║
+║ savRate≥30%      ║ burnRate =       ║ group txs     ║  avg(last 14d expense) ║
+║  → Smart Saver   ║  totalExp /      ║  by category  ║                        ║
+║ savRate≥10%      ║  daysElapsed     ║               ║ spike% =               ║
+║  → Balanced      ║                  ║ sort DESC     ║  (today-base)/         ║
+║ smallTx>50%      ║ daysToEmpty =    ║  by total     ║  base × 100            ║
+║  → Impulsive     ║  balance /       ║               ║                        ║
+║ else             ║  burnRate        ║ pct(cat,      ║ if spike ≥ 150%        ║
+║  → Heavy Spender ║                  ║  totalExp)    ║  → 🚨 alert            ║
+╚══════════════════╩══════════════════╩═══════════════╩════════════════════════╝
+                               │
+                               ▼
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           🗄️  DATABASE — Prisma ORM                                          ║
+║                                                                              ║
+║  User          → id, email, name, hashedPassword                             ║
+║  Balance       → userId, amount (saldo realtime)                             ║
+║  Transaction   → userId, type, amount, description, category, date          ║
+║  BudgetLimit   → userId, type (daily/goal/saved), amount                    ║
+║  ChatHistory   → userId, role, content, createdAt                            ║
+║                                                                              ║
+║  SQLite (development)  →  PostgreSQL (production)                            ║
+╚══════════════════════════════╤═══════════════════════════════════════════════╝
+                               │
+                               ▼
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              📤  RESPONSE FORMATTER                                           ║
+║                                                                              ║
+║  📱 Text Mode   → formatted with emoji, newlines, progress bars ██████░░    ║
+║  🎤 Voice Mode  → single paragraph, no newlines, TTS-friendly               ║
+║  🚨 Auto-alerts → anomaly + budget warnings injected inline                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-| Layer        | Yang Dipakai                                              |
-| ------------ | --------------------------------------------------------- |
-| Framework    | Next.js 16, TypeScript                                    |
-| Auth         | NextAuth.js (JWT session)                                 |
-| Database     | SQLite (dev) · PostgreSQL (prod)                          |
-| ORM          | Prisma                                                    |
-| AI Utama     | Google Gemini 2.5 Flash (Intent + Reply Generation)       |
-| NLP Fallback | HuggingFace IndoBERT Zero-Shot + Custom Regex Rule Engine |
-| Analytics    | Rule-based aggregation, burn rate, persona classification |
-| UI           | Vanilla CSS · Pixelify Sans · Press Start 2P             |
+### Tech Stack
+
+| Layer | Yang Dipakai |
+| --- | --- |
+| Framework | Next.js 15, TypeScript |
+| Auth | NextAuth.js (JWT session) |
+| Database | SQLite (dev) · PostgreSQL (prod) |
+| ORM | Prisma |
+| AI Intent Parser | Google Gemini 2.5 Flash (`temperature: 0.1`) |
+| NLP Primary | HuggingFace IndoBERT Zero-Shot Classification |
+| NLP Fallback | Custom Regex Rule Engine (20 intent patterns) |
+| Amount Parser | Multi-pattern: `50rb`, `3@12000`, `1.5jt`, `Rp 250.000` |
+| Date Parser | Named months, ranges (`17 maret - 18 maret`), relative (`kemarin`) |
+| Analytics Engine | Rule-based: burn rate, persona, anomaly, comparison |
+| Voice | `/api/voice` + `/api/tts` (TTS/STT pipeline) |
+| UI | Vanilla CSS · Pixelify Sans · Press Start 2P |
+
+### API Routes
+
+| Route | Fungsi |
+| --- | --- |
+| `POST /api/chat` | Otak utama — parse intent, jalankan handler, simpan ke DB |
+| `GET /api/chat` | Ambil 50 chat history terakhir |
+| `GET /api/stats/summary` | Data dashboard: 7-hari, kategori, total |
+| `GET /api/balance` | Saldo user aktif |
+| `POST /api/balance` | Update saldo manual |
+| `POST /api/savings` | Setor ke celengan / cek progress savings |
+| `POST /api/voice` | Voice mode — same as chat, TTS-optimized reply |
+| `POST /api/tts` | Text-to-Speech synthesis |
+| `POST /api/auth/register` | Daftar user baru |
+| `GET/POST /api/auth/[...nextauth]` | Login, session, OAuth |
 
 ---
 

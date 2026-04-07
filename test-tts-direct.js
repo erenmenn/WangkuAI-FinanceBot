@@ -12,7 +12,7 @@ const options = {
   method: 'POST',
   headers: {
     'Accept': 'audio/mpeg',
-    'xi-api-key': 'sk_a6be6f5abc9500359af44ac9add44ca373f47adaaf1092fe',
+    'xi-api-key': process.env.ELEVENLABS_API_KEY || 'TARUH_API_KEY_DISINI',
     'Content-Type': 'application/json',
     'Content-Length': data.length
   }

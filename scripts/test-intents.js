@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const GEMINI_API_KEY = "AIzaSyCtzFDiMvSe6vABHV4t7nHfUIfLOgPMO2g";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "TARUH_API_KEY_DISINI_ATAU_GUNAKAN_ENV";
 
 async function parseWithGemini(userMessage, balance) {
   const prompt = `

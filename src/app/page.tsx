@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Mic, PiggyBank, LayoutDashboard, LogOut, Settings, Mail, Info } from 'lucide-react';
 
 // ─── Utilities ───────────────────────────────────────────────
 const formatRp  = (num: number) => 'Rp ' + Math.floor(num || 0).toLocaleString('id-ID');
@@ -228,84 +229,47 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ── Mini Dashboard Panel (toggle) ────────────── */}
-          <div className="dash-panel">
-            <button className="dash-panel-toggle" onClick={() => setShowDash(v => !v)}>
-              <span>Dashboard Harian</span>
-              <span style={{ fontSize:10, opacity:0.6 }}>{showDash ? '▲' : '▼'}</span>
-            </button>
-            {showDash && (
-              <div className="dash-panel-body">
-                {/* Budget progress bar */}
-                <div style={{ marginBottom:10 }}>
-                  <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-                    <span className="dash-panel-lbl">Budget Harian</span>
-                    <span className="dash-panel-lbl" style={{ color: pct >= 100 ? '#ef4444' : pct >= 75 ? '#f59e0b' : '#10b981' }}>
-                      {budgetLimit > 0 ? `${pct.toFixed(0)}%` : 'Belum diset'}
-                    </span>
-                  </div>
-                  <div className="dash-bar-track">
-                    <div className="dash-bar-fill" style={{
-                      width: `${pct}%`,
-                      background: pct >= 100 ? '#ef4444' : pct >= 75 ? '#f59e0b' : '#10b981'
-                    }} />
-                  </div>
-                  {budgetLimit > 0 && (
-                    <div style={{ display:'flex', justifyContent:'space-between', marginTop:3 }}>
-                      <span className="dash-panel-lbl" style={{ color:'#ef4444' }}>{formatRp(expense)} dipakai</span>
-                      <span className="dash-panel-lbl">dari {formatRp(budgetLimit)}</span>
-                    </div>
-                  )}
-                </div>
-                {/* Net ringkasan */}
-                <div className="dash-net-row">
-                  <span className="dash-panel-lbl">Net hari ini</span>
-                  <span style={{ fontWeight:700, fontSize:13, color: net >= 0 ? '#10b981' : '#ef4444' }}>
-                    {net >= 0 ? '+' : ''}{formatRp(net)}
-                  </span>
-                </div>
-                <div className="dash-grid-3">
-                  <div className="dash-mini-stat" style={{ borderColor:'rgba(16,185,129,0.2)' }}>
-                    <span className="dash-panel-lbl">Pemasukan</span>
-                    <span style={{ color:'#10b981', fontWeight:700, fontSize:12 }}>{formatRp(income)}</span>
-                  </div>
-                  <div className="dash-mini-stat" style={{ borderColor:'rgba(239,68,68,0.2)' }}>
-                    <span className="dash-panel-lbl">Pengeluaran</span>
-                    <span style={{ color:'#ef4444', fontWeight:700, fontSize:12 }}>{formatRp(expense)}</span>
-                  </div>
-                  <div className="dash-mini-stat" style={{ borderColor:'rgba(255, 160, 0,0.2)' }}>
-                    <span className="dash-panel-lbl">Transaksi</span>
-                    <span style={{ color:'#1C1917', fontWeight:700, fontSize:12 }}>{transactions.length}</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
 
-          {/* Budget lamp row */}
-          <div className="budget-lamp-row">
-            <div className="lamp-left">
-              <div className={lampCls} />
-              <div>
-                <div className="lamp-label">Budget Harian</div>
-                <div className="lamp-amount">
-                  {budgetLimit > 0 ? `${formatRp(expense)} / ${formatRp(budgetLimit)}` : 'Belum diset'}
-                </div>
+          {/* Budget progress bar */}
+          <div style={{ background: 'rgba(255, 255, 255, 0.5)', border: '1px solid rgba(255,255,255,0.8)', borderRadius: '16px', padding: '16px', marginBottom: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.05)', backdropFilter: 'blur(12px)' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:8 }}>
+              <span style={{ fontSize:13, fontWeight:700, color:'#374151' }}>Budget Harian</span>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <span style={{ fontSize:14, fontWeight: 'bold', color: pct >= 100 ? '#ef4444' : pct >= 75 ? '#f59e0b' : '#10b981' }}>
+                  {budgetLimit > 0 ? `${pct.toFixed(0)}%` : '0%'}
+                </span>
+                <button
+                  onClick={() => {
+                    const v = prompt('Set budget harian (contoh: 100000):');
+                    if (v && !isNaN(Number(v))) {
+                      fetch('/api/budget', {
+                        method:'POST',
+                        headers:{'Content-Type':'application/json'},
+                        body: JSON.stringify({ daily_limit: Number(v) })
+                      }).then(loadBudget);
+                    }
+                  }}
+                  style={{ background: '#f3f4f6', border: 'none', borderRadius: '8px', fontSize: '11px', color: '#4b5563', fontWeight: 600, cursor: 'pointer', padding: '4px 8px', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => e.currentTarget.style.background = '#e5e7eb'}
+                  onMouseOut={(e) => e.currentTarget.style.background = '#f3f4f6'}
+                >
+                  Edit
+                </button>
               </div>
             </div>
-            <button
-              className="btn-budget-setting"
-              onClick={() => {
-                const v = prompt('Set budget harian (contoh: 100000):');
-                if (v && !isNaN(Number(v))) {
-                  fetch('/api/budget', {
-                    method:'POST',
-                    headers:{'Content-Type':'application/json'},
-                    body: JSON.stringify({ daily_limit: Number(v) })
-                  }).then(loadBudget);
-                }
-              }}
-            >Atur</button>
+            <div style={{ height: '8px', background: 'rgba(0, 0, 0, 0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                width: `${pct}%`,
+                background: pct >= 100 ? '#ef4444' : pct >= 75 ? '#f59e0b' : '#10b981',
+                transition: 'width 0.5s ease',
+                borderRadius: '4px'
+              }} />
+            </div>
+            <div style={{ display:'flex', justifyContent:'space-between', marginTop:8 }}>
+              <span style={{ fontSize:12, color:'#ef4444', fontWeight:600 }}>{formatRp(expense)} dipakai</span>
+              <span style={{ fontSize:12, color:'#6b7280', fontWeight:600 }}>dari {budgetLimit > 0 ? formatRp(budgetLimit) : 'Belum diset'}</span>
+            </div>
           </div>
 
           {/* Recent Transactions */}
@@ -328,30 +292,97 @@ export default function Home() {
             )}
           </div>
 
-          {/* Bottom links */}
-          <div style={{ display:'flex', flexDirection:'column', gap:8, marginTop:'auto', paddingTop:12 }}>
-            <button
-              className="dash-link voice-link"
-              onClick={startVoice}
-              style={{ cursor:'pointer', border:'none' }}
-            >
-              <div className="voice-link-dot" />
-              Mode Suara AI
-            </button>
+          {/* Bottom links & User Profile */}
+          <div style={{ display:'flex', flexDirection:'column', gap: '10px', marginTop:'auto', paddingTop:'20px' }}>
+            
+            {/* User Profile / Email */}
+            <div style={{ display:'flex', alignItems:'center', gap: '12px', padding: '12px', background:'rgba(255,255,255,0.4)', borderRadius:'16px', backdropFilter:'blur(10px)', border:'1px solid rgba(255,255,255,0.5)', marginBottom: '4px' }}>
+              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+                {userName.charAt(0).toUpperCase()}
+              </div>
+              <div style={{ overflow: 'hidden' }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: '#1f2937' }}>{userName}</div>
+                <div style={{ fontSize: '11px', color: '#6b7280', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                  {session?.user?.email || 'user@example.com'}
+                </div>
+              </div>
+            </div>
+
             <Link
-              href="/dashboard"
-              className="dash-link"
-              style={{ background:'#FEF3C7', color:'#1C1917', border:'4px solid #1C1917', textAlign:'center', display:'block', textDecoration:'none', fontWeight:600 }}
+              href="/voice"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px',
+                background: 'linear-gradient(135deg, #d946ef 0%, #ec4899 50%, #eab308 100%)',
+                color: '#fff', borderRadius: '14px', textDecoration: 'none', fontWeight: 700, fontSize: '14px',
+                boxShadow: '0 4px 15px rgba(236, 72, 153, 0.3)', transition: 'all 0.2s ease', border: 'none'
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(236, 72, 153, 0.4)'; }}
+              onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0px)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(236, 72, 153, 0.3)'; }}
             >
-              Dashboard Lengkap
+              <Mic size={18} /> VOICE AI
             </Link>
-            <button
-              onClick={() => signOut({ callbackUrl: '/auth/login' })}
-              className="dash-link"
-              style={{ background:'#FBBF24', color:'#991B1B', border:'4px solid #1C1917', cursor:'pointer', textAlign:'center', width:'100%' }}
-            >
-              Keluar
-            </button>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <Link
+                href="/dashboard/savings"
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                  padding: '12px 6px', background: 'rgba(255, 255, 255, 0.7)', color: '#be185d',
+                  borderRadius: '14px', textDecoration: 'none', fontWeight: 600, fontSize: '12px',
+                  backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.8)', transition: 'all 0.2s ease', 
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.02)'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.05)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0px)'; e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.02)'; }}
+              >
+                <PiggyBank size={20} /> Celengan
+              </Link>
+
+              <Link
+                href="/dashboard"
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                  padding: '12px 6px', background: 'rgba(255, 255, 255, 0.7)', color: '#0369a1',
+                  borderRadius: '14px', textDecoration: 'none', fontWeight: 600, fontSize: '12px',
+                  backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.8)', transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.02)'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.05)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0px)'; e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.02)'; }}
+              >
+                <LayoutDashboard size={20} /> Dashboard
+              </Link>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <Link
+                href="/settings"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                  padding: '10px 6px', background: 'rgba(243, 244, 246, 0.8)', color: '#4b5563',
+                  borderRadius: '14px', textDecoration: 'none', fontWeight: 600, fontSize: '13px',
+                  border: '1px solid rgba(229, 231, 235, 0.5)', transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(229, 231, 235, 0.9)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(243, 244, 246, 0.8)'; }}
+              >
+                <Settings size={16} /> Setting
+              </Link>
+
+              <button
+                onClick={() => signOut({ callbackUrl: '/auth/login' })}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                  padding: '10px 6px', background: 'rgba(254, 226, 226, 0.8)', color: '#dc2626',
+                  borderRadius: '14px', border: '1px solid rgba(252, 165, 165, 0.5)',
+                  fontWeight: 600, fontSize: '13px', cursor: 'pointer', transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(252, 165, 165, 0.8)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(254, 226, 226, 0.8)'; }}
+              >
+                <LogOut size={16} /> Keluar
+              </button>
+            </div>
           </div>
         </aside>
 
@@ -361,9 +392,12 @@ export default function Home() {
           {/* Top bar */}
           <div className="topbar">
             <div className="topbar-title">Chat dengan MinoAI</div>
-            <div className="topbar-right">
-              <div className="status-dot" />
-              <span>MinoAI Online ✦ Hybrid NLP</span>
+            <div className="topbar-right" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div className="status-dot" />
+                <span>MinoAI Online ✦ Hybrid NLP</span>
+              </div>
+
             </div>
           </div>
 

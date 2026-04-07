@@ -108,7 +108,7 @@ function classifyIntentByRules(text: string): string {
   // ── PEMASUKAN (income) — HARUS SEBELUM check_month! ──────────────
   // "dapat gaji bulan ini 2 juta" → income, BUKAN check_month
   const hasAmount = /\d/.test(t) || /\b(ribu|rb|juta|jt|ratus|k|perak)\b/.test(t);
-  const hasIncomeVerb = /\b(gaji|gajian|dapat gaji|terima gaji|dibayar|dapat|dapet|nerima|terima|pemasukan|income|bonus|thr|uang saku|nafkah|komisi|upah|honor|honorarium|kiriman|transfer masuk|uang masuk)\b/.test(t);
+  const hasIncomeVerb = /\b(gaji|gajian|dapat|dapet|mendapat|mendapatkan|dapetin|terima|menerima|nerima|dibayar|nemu|dikasih|pemasukan|income|bonus|thr|uang saku|nafkah|komisi|upah|honor|honorarium|kiriman|transfer masuk|uang masuk)\b/.test(t);
   if (hasIncomeVerb && hasAmount) return 'income';
 
   // ── Cek riwayat / history ──────────────────────
@@ -138,7 +138,7 @@ function classifyIntentByRules(text: string): string {
     return 'check_balance';
 
   // ── PENGELUARAN (expense) ──────────────────────
-  const hasExpenseVerb = /\b(beli|bayar|habis|jajan|keluar|belanja|makan|minum|isi bensin|top up|topup|ngeluarin|ngeluarkan|spend|borong|pesan|order|nyicil|cicil|bayarin|sewa|ngisi|charge|isi ulang|bayar tagihan|nonton|main|langganan|subscribe|subs|rental)\b/.test(t);
+  const hasExpenseVerb = /\b(beli|membeli|belin|bayar|membayar|bayarin|habis|menghabiskan|jajan|keluar|mengeluarkan|ngeluarin|belanja|makan|minum|isi bensin|top up|topup|spend|borong|pesan|order|nyicil|cicil|sewa|ngisi|charge|isi ulang|nonton|main|langganan|subscribe|subs|rental)\b/.test(t);
   if (hasExpenseVerb && hasAmount) return 'expense';
 
   // ── Cek transaksi hari ini ─────────────────────
@@ -366,13 +366,12 @@ function extractDescription(text: string, intent: string): string | null {
   const triggerPatterns: RegExp[] = [];
   if (intent === 'expense') {
     triggerPatterns.push(
-      /^(tadi\s+)?(beli|bayar|habis|jajan|keluar|belanja|makan|beli)\s+/i,
-      /^(aku|saya|gue|gw|ane)?\s*(beli|bayar|jajan|makan|habis(kan)?)\s+/i,
+      /^(?:aku|saya|gue|gw|ane)?\s*(?:tadi|baru saja|barusan|habis)?\s*(?:beli|membeli|belin|bayar|membayar|bayarin|habis|menghabiskan|jajan|keluar|mengeluarkan|belanja|makan)\s+/i,
     );
   } else if (intent === 'income') {
     triggerPatterns.push(
-      /^(aku|saya|gue|gw)?\s*(dapat|terima|nerima|dapet|masuk)\s+/i,
-      /^(gajian|pemasukan dari|income dari)\s+/i,
+      /^(?:aku|saya|gue|gw|ane)?\s*(?:tadi|baru saja|barusan|habis)?\s*(?:dapat|dapet|mendapat|mendapatkan|dapetin|terima|menerima|nerima|masuk|dikasih)\s+/i,
+      /^(?:gajian|pemasukan dari|income dari)\s+/i,
     );
   }
 

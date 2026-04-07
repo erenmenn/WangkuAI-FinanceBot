@@ -441,6 +441,23 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
+        {/* LINK KE TABUNGAN */}
+        <div style={{ marginBottom:'24px', animationDelay:'.35s' }}>
+          <Link href="/dashboard/savings" style={{ display:'block', textDecoration:'none' }}>
+            <div className="glass-card table-link-card" style={{ padding:'26px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', transition:'all 0.3s ease', cursor:'pointer', background: 'linear-gradient(to right, #fce7f3, #fbcfe8)', borderColor: '#f472b6' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:'20px' }}>
+                <div style={{ fontSize: '32px' }}>🐷</div>
+                <div>
+                  <h3 style={{ fontFamily: "'Pixelify Sans', sans-serif", fontSize:'20px', color:'#9d174d', marginBottom:'4px' }}>Celengan Babi (Tabungan)</h3>
+                  <p style={{ fontSize:'13px', color:'#be185d', margin:0 }}>Simpan uang, set target tabungan bulan ini, dan pantau progress sisa uangmu secara visual.</p>
+                </div>
+              </div>
+              <div style={{ width:'40px', height:'40px', borderRadius:'50%', background:'white', display:'flex', alignItems:'center', justifyContent:'center', color:'#f472b6', fontSize:'18px', border: '3px solid #f472b6', boxShadow: '3px 3px 0px #f472b6' }}>
+                →
+              </div>
+            </div>
+          </Link>
+        </div>
 
         {/* LINK KE TABEL INTENT & KATEGORI */}
         <div style={{ marginBottom:'24px', animationDelay:'.4s' }}>

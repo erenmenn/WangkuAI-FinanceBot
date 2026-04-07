@@ -11,8 +11,10 @@
   <img src="https://img.shields.io/badge/Platform-Web%20App-blue?style=for-the-badge&logo=googlechrome" />
   <img src="https://img.shields.io/badge/Bahasa-Indonesia%20🇮🇩-red?style=for-the-badge" />
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/AI-Gemini%202.5%20Flash-purple?style=for-the-badge&logo=google" />
   <img src="https://img.shields.io/badge/NLP-IndoBERT-FF9D00?style=for-the-badge&logo=huggingface" />
   <img src="https://img.shields.io/badge/Multi--User-✅-success?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Version-2.0-blue?style=for-the-badge" />
 
 <br/><br/>
 
@@ -20,6 +22,7 @@
 <a href="#-lihat-sendiri-cara-kerjanya">🎬 Demo</a> &nbsp;•&nbsp;
 <a href="#-cara-kerja-di-balik-layar">⚙️ Cara Kerja</a> &nbsp;•&nbsp;
 <a href="#-fitur-lengkap">✨ Fitur</a> &nbsp;•&nbsp;
+<a href="#-intent-lengkap-19-intent">🧠 Intent</a> &nbsp;•&nbsp;
 <a href="#-wangkuai-vs-aplikasi-keuangan-lain">🆚 Perbandingan</a> &nbsp;•&nbsp;
 <a href="#️-arsitektur">🏗️ Arsitektur</a>
 
@@ -29,7 +32,7 @@
 
 ## 💬 Apa itu WangkuAI?
 
-**WangkuAI** adalah asisten keuangan pribadi berbasis percakapan yang memungkinkan siapa pun **mencatat dan memantau keuangan harian hanya dengan mengetik kalimat biasa** — seperti chat ke teman, tanpa form, tanpa pilih kategori, tanpa drama.
+**WangkuAI** adalah asisten keuangan pribadi berbasis percakapan yang memungkinkan siapa pun **mencatat, memantau, dan menganalisa keuangan harian hanya dengan mengetik kalimat biasa** — seperti chat ke teman, tanpa form, tanpa pilih kategori, tanpa drama.
 
 ### Masalah yang diselesaikan
 
@@ -57,38 +60,122 @@ WangkuAI:
 
 ```
 Kamu  :  beli kopi 15rb
-Wangku:  ☕ Pengeluaran Dicatat!
-          📌 Item      : kopi
-          💵 Nominal   : Rp 15.000
-          🏦 Sisa Saldo: Rp 985.000
+MinoAI:  ✅ 1 Transaksi Berhasil Dicatat!
+          ──────────────────────
+          1. 💸 kopi — -Rp 15.000
+          ──────────────────────
+          💸 Total Pengeluaran: Rp 15.000
+          🏦 Saldo Baru: Rp 985.000
 ```
 
-### Harga satuan? Bisa.
+### Insight Kategori — tau paling boros di mana
 
 ```
-Kamu  :  3 gelas kopi @12000
-Wangku:  ☕ Pengeluaran Dicatat!
-          📌 Item      : 3 gelas kopi
-          📐 3 × Rp12.000 = Rp36.000
-          💵 Nominal   : Rp 36.000
-          🏦 Sisa Saldo: Rp 964.000
+Kamu  :  minggu ini aku paling banyak habis di apa?
+MinoAI:  📊 Minggu Ini — Kategori Terbesar
+          ──────────────────────
+          1. 🍜 makanan
+             ████████░░ Rp 420.000 (45%)
+          2. 🚗 transport
+             ████░░░░░░ Rp 180.000 (19%)
+          3. ☕ minuman
+             ███░░░░░░░ Rp 95.000 (10%)
+
+          ⚠️ Insight:
+          Kategori 🍜 makanan mendominasi 45% dari total pengeluaranmu.
+
+          💡 Saran:
+          Coba masak sendiri 2–3x seminggu dan kurangi pesan online 🍱
 ```
 
-### Banyak item sekaligus — 1 pesan, semua tercatat
+### Profil Keuangan — AI yang "kenal kamu"
 
 ```
-Kamu  :  beli baju 80rb dan makan siang 25rb dan kopi 15rb
-Wangku:  💸 3 Pengeluaran Dicatat Sekaligus!
-         ──────────────────────
-          1. baju        — Rp 80.000   👗 fashion
-          2. makan siang — Rp 25.000   🍜 makanan
-          3. kopi        — Rp 15.000   ☕ minuman
-         ──────────────────────
-          💵 Total      : Rp 120.000
-          🏦 Sisa Saldo : Rp 880.000
+Kamu  :  aku boros gak?
+MinoAI:  🧠 Profil Keuanganmu
+          ──────────────────────
+          Kamu cenderung: Impulsive Spender 🛍️
+
+          📊 Kondisi Bulan Ini:
+          • Pemasukan  : Rp 3.000.000
+          • Pengeluaran: Rp 2.750.000
+          • Saving Rate: 8% 🟡 Bisa lebih baik
+          • Burn Rate  : ~Rp 91.667/hari
+
+          📌 Ciri kamu:
+          • Banyak transaksi kecil (kopi, snack, jajan)
+          • Sering transaksi harian berulang
+          • Kebiasaan beli tanpa rencana
+
+          💡 Saran:
+          Gunakan aturan "tunggu 24 jam" sebelum beli. Set limit harian & evaluasi tiap malam.
 ```
 
-### Laporan kapan saja, dalam bahasa biasa
+### Prediksi Dompet — MinoAI jadi peramal
+
+```
+Kamu  :  kalau aku terus kayak gini, bakal habis kapan?
+MinoAI:  🔮 Prediksi Keuangan
+          ──────────────────────
+          📉 Burn Rate Harian: ~Rp 91.667/hari
+          💰 Saldo Saat Ini  : Rp 750.000
+
+          ⏳ Jika pola pengeluaran tetap:
+          → Saldo akan habis dalam ±8 hari
+          ⚠️ Mulai hemat dari sekarang.
+
+          💡 Saran:
+          Kurangi pengeluaran harian 20% → ~Rp 73.334/hari
+```
+
+### Perbandingan Periode — tau tren keuangan
+
+```
+Kamu  :  minggu ini lebih boros dari minggu lalu gak?
+MinoAI:  📊 Perbandingan Mingguan
+          ──────────────────────
+          📅 Minggu Ini  : Rp 800.000
+          📅 Minggu Lalu : Rp 650.000
+          ──────────────────────
+          ⬆️ Naik 23% (lebih boros Rp 150.000)
+
+          📌 Penyebab utama kenaikan: 🍜 makanan +Rp 120.000
+```
+
+### Goal Tracking — MinoAI jadi coach
+
+```
+Kamu  :  aku mau nabung 1 juta bulan ini
+MinoAI:  🎯 Target Tabungan Bulan Ini Diset!
+          ──────────────────────
+          💰 Target  : Rp 1.000.000
+          ⏳ Sisa waktu : 10 hari
+          📌 Perlu nabung ~Rp 100.000/hari
+
+Kamu  :  progress tabungan aku gimana?
+MinoAI:  🎯 Progress Goal Tabungan Bulan Ini
+          ──────────────────────
+          🏁 Target  : Rp 1.000.000
+          💰 Terkumpul: Rp 650.000
+          ██████░░░░ 65%
+          ⏳ Sisa waktu: 10 hari
+          📌 Perlu hemat ~Rp 35.000/hari untuk capai target!
+```
+
+### Anomaly Detection — AI yang "sadar" lonjakan
+
+```
+(Otomatis setelah transaksi atau query "pengeluaran tidak biasa")
+
+MinoAI:  🚨 Pengeluaran Tidak Biasa!
+          Hari ini Rp 300.000 (biasanya ~Rp 90.000)
+          ⚠️ Lonjakan 233%
+          📌 Penyebab utama: 👗 fashion
+          
+          💬 Mau aku bantu set limit pengeluaran harian?
+```
+
+### Laporan klasik — tetap tersedia
 
 <table>
 <tr><th>Yang Kamu Ketik</th><th>Balasan WangkuAI</th></tr>
@@ -103,6 +190,17 @@ Wangku:  💸 3 Pengeluaran Dicatat Sekaligus!
 <tr><td><code>dapat gaji 3 juta</code></td><td>💰 Saldo bertambah Rp 3.000.000, pemasukan dicatat</td></tr>
 </table>
 
+### 🔄 Simulasi Session Mengalir (Full User Journey)
+
+WangkuAI dirancang untuk teman ngobrol dari awal sampai akhir bulan, merespons rentetan konteks dengan cerdas:
+1. `set saldo 1.5 juta` → _(Set dompet awal)_
+2. `aku mau nabung 500rb bulan ini` → _(AI hitung target hemat per hari)_
+3. `beli ayam geprek 20rb dan es teh 5rb` → _(Catat pengeluaran, saldo otomatis berkurang)_
+4. `dapat transferan 200rb, tapi langsung jajan 30rb` → _(Pemasukan & pengeluaran dalam satu pesan diproses sekaligus)_
+5. `minggu ini gue boros di mana?` → _(Minta insight kategori yang paling kuras dompet)_
+6. `bakal habis kapan kalau gini terus?` → _(Prediksi umur sisa saldo dengan burn rate saat ini)_
+7. `gimana cara aku lebih hemat?` → _(Dapat saran personal based-on data transaksimu)_
+
 ---
 
 ## ⚙️ Cara Kerja di Balik Layar
@@ -114,41 +212,38 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
       │
       ▼
  ┌──────────────────────────────────────────────────────┐
- │                  🧠 NLP PIPELINE                     │
+ │               🧠 GEMINI 2.5 FLASH AI                │
  │                                                      │
- │  [1] HuggingFace IndoBERT (Zero-Shot NLI)           │
- │      → Deteksi intent: "expense"  (conf: 0.91)      │
- │        Model AI berbasis bahasa Indonesia            │
- │        Jika offline → otomatis fallback ke [2]       │
- │                                                      │
- │  [2] Rule-Based Regex (Fallback)                     │
- │      → Pola linguistik bahasa Indonesia              │
- │        Selalu tersedia, tanpa butuh internet         │
- │                                                      │
- │  [3] Extractor — selalu aktif, paralel               │
- │      → Amount : "350rb" → 350.000                   │
- │                 "25rb"  → 25.000                    │
- │      → Kategori: 👗 fashion (sepatu)                 │
- │                  🍜 makanan (makan siang)            │
+ │  Parse intent + ekstrak semua transaksi sekaligus   │
+ │  → intent: "transaction"                            │
+ │  → transactions: [{sepatu, 350000}, {makan, 25000}] │
+ │  → replyText: pesan motivasi gaul                   │
  └───────────────────────┬──────────────────────────────┘
                          │
                          ▼
  ┌──────────────────────────────────────────────────────┐
- │                  📦 INTENT ROUTER                    │
+ │                  📦 INTENT ROUTER                   │
  │                                                      │
- │  case "expense" (multi-item):                        │
- │  ✦ Kurangi saldo Rp 375.000                         │
- │  ✦ Simpan 2 transaksi ke database                   │
- │  ✦ Cek apakah sudah mendekati budget limit          │
- │  ✦ Susun teks balasan yang informatif               │
+ │  19 intent handler (core + v2 analytics):           │
+ │  ✦ transaction       ✦ check_balance                │
+ │  ✦ check_month       ✦ check_today                  │
+ │  ✦ check_history     ✦ insight_category_spending    │
+ │  ✦ financial_health  ✦ spending_prediction          │
+ │  ✦ comparison_period ✦ goal_tracking                │
+ │  ✦ recommendation    ✦ anomaly_detection            │
+ │  ✦ set_goal          ✦ knowledge...                 │
  └───────────────────────┬──────────────────────────────┘
                          │
                          ▼
- Balasan:
- "💸 2 Pengeluaran Dicatat Sekaligus!
-   1. sepatu      — Rp 350.000 👗
-   2. makan siang — Rp  25.000 🍜
-   💵 Total: Rp 375.000  |  🏦 Sisa: Rp 1.425.000"
+ ┌──────────────────────────────────────────────────────┐
+ │                   🗄️ DATABASE                       │
+ │                                                      │
+ │  Aggregation, Comparison, Burn Rate, Goal Tracking  │
+ │  Anomaly Baseline, Category Stats — via Prisma ORM  │
+ └──────────────────────────────────────────────────────┘
+                         │
+                         ▼
+ Balasan terformat dengan insight + rekomendasi personal
 ```
 
 ---
@@ -159,6 +254,7 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 <tr><th colspan="2">💬 Pencatatan Cerdas via Chat</th></tr>
 <tr><td>📝 Catat 1 item pengeluaran</td><td><code>beli kopi 15rb</code></td></tr>
 <tr><td>📝 Catat banyak item sekaligus</td><td><code>beli baju 80rb dan makan 25rb dan kopi 15rb</code></td></tr>
+<tr><td>🔀 Catat Pemasukan & Pengeluaran sekaligus</td><td><code>dapat cashback 15k tapi jajan cilok 10k</code></td></tr>
 <tr><td>📐 Deteksi kuantitas × harga satuan</td><td><code>3 gelas es teh @5000</code> → Rp 15.000</td></tr>
 <tr><td>💰 Catat pemasukan</td><td><code>dapat gaji 3 juta</code> / <code>terima transfer 500rb</code></td></tr>
 <tr><td>⚙️ Set saldo awal dompet</td><td><code>set saldo 1 juta</code></td></tr>
@@ -178,9 +274,21 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 <tr><td>🚨 Peringatan keras saat budget terlampaui</td><td>Tampil merah & mencolok di chat</td></tr>
 <tr><td>🗑️ Reset catatan hari ini</td><td><code>hapus catatan hari ini</code></td></tr>
 
+<tr><th colspan="2">🧠 AI Analytics & Insight (NEW v2.0)</th></tr>
+<tr><td>📊 Insight kategori pengeluaran terbesar</td><td><code>minggu ini aku paling banyak habis di apa?</code></td></tr>
+<tr><td>🧠 Financial health check & profil spender</td><td><code>keuanganku sehat gak?</code> / <code>aku tipe spender apa?</code></td></tr>
+<tr><td>🔮 Prediksi saldo & proyeksi akhir bulan</td><td><code>kalau aku terus kayak gini bakal habis kapan?</code></td></tr>
+<tr><td>📊 Perbandingan minggu/bulan ini vs lalu</td><td><code>bulan ini lebih hemat dari bulan lalu gak?</code></td></tr>
+<tr><td>🎯 Set & track goal tabungan bulanan</td><td><code>aku mau nabung 1 juta bulan ini</code></td></tr>
+<tr><td>📈 Progress tracking goal tabungan</td><td><code>progress tabunganku gimana?</code></td></tr>
+<tr><td>💡 Smart recommendation engine</td><td><code>kasih saran keuanganku dong</code></td></tr>
+<tr><td>🚨 Anomaly detection — lonjakan pengeluaran</td><td><code>pengeluaran hari ini normal gak?</code> (+ auto-trigger)</td></tr>
+<tr><td>🤖 Pemahaman Edge Case & Konteks Rumit</td><td><code>minggu kemarin vs sekarang mana lebih parah?</code></td></tr>
+<tr><td>💬 Conversational follow-up suggestion</td><td>Otomatis setelah setiap respons transaksi & anomali</td></tr>
+
 <tr><th colspan="2">📈 Dashboard Visual Lengkap</th></tr>
 <tr><td>📊 Chart batang 7 hari terakhir</td><td>Pemasukan vs Pengeluaran berdampingan</td></tr>
-<tr><td>🍩 Donut chart komposisi kategori</td><td>Tahu mana yang paling menguras kantong</td></tr>
+<tr><td>🍩 Donut chart komposisi kategori</td><td>Tau mana yang paling menguras kantong</td></tr>
 <tr><td>🏷️ Tabel transaksi + filter dropdown</td><td>Filter intent (Pemasukan/Pengeluaran) + 25+ kategori</td></tr>
 <tr><td>⬇️ Export CSV sekali klik</td><td>Download laporan semua transaksi</td></tr>
 
@@ -197,23 +305,71 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 
 ---
 
+## 🧠 Intent Lengkap (19 Intent)
+
+### Core Intents (12)
+
+| Intent | Trigger Contoh | Aksi |
+|--------|---------------|------|
+| `transaction` | `beli kopi 15rb`, `dapat gaji 3 juta` | Catat transaksi ke DB, update saldo |
+| `check_balance` | `berapa saldo aku?` | Tampilkan saldo + status |
+| `check_month` | `rekap bulan ini` | Rekap pemasukan/pengeluaran bulanan |
+| `check_today` | `pengeluaran hari ini` | Daftar transaksi + total hari ini |
+| `check_history` | `riwayat transaksi` | 10 transaksi terakhir |
+| `check_date` | `pengeluaran 15 maret` | Laporan tanggal spesifik |
+| `check_range` | `dari 1-10 maret` | Laporan rentang tanggal |
+| `set_limit` | `set limit harian 100rb` | Set budget harian |
+| `set_balance` | `set saldo 500rb` | Set saldo awal |
+| `clear_today` | `hapus catatan hari ini` | Hapus transaksi hari ini |
+| `knowledge` | `tips menabung` | Jawab pertanyaan keuangan umum |
+
+### Analytics Intents v2.0 (8 NEW)
+
+| Intent | Trigger Contoh | Analisa Yang Dilakukan |
+|--------|---------------|----------------------|
+| `insight_category_spending` | `minggu ini boros di mana?`, `kategori terbesar apa?` | Aggregasi & ranking per kategori + persentase + advice |
+| `financial_health_check` | `keuanganku sehat gak?`, `aku tipe spender apa?` | Saving rate, burn rate, persona classifier (Saver/Balanced/Impulsive/Heavy) |
+| `spending_prediction` | `bakal habis kapan?`, `bisa nabung gak bulan ini?` | Burn rate → prediksi hari saldo habis + proyeksi akhir bulan |
+| `comparison_period` | `minggu ini vs minggu lalu?`, `bulan ini lebih hemat?` | Perbandingan total + penyebab utama kenaikan/penurunan |
+| `goal_tracking` | `progress tabunganku?`, `udah berapa yang terkumpul?` | Progress bar + sisa hari + target harian |
+| `set_goal` | `aku mau nabung 1 juta bulan ini` | Set saving goal + kalkulasi target per hari |
+| `recommendation_engine` | `kasih saran keuanganku dong`, `analisa pengeluaranku` | Rule-based rekomendasi personal berdasarkan pola nyata |
+| `anomaly_detection` | `hari ini pengeluaranku normal gak?` (+ auto-trigger) | Deteksi lonjakan vs baseline 14 hari + identifikasi penyebab |
+
+### Spending Persona Classification
+
+| Persona | Kriteria | Advice |
+|---------|----------|--------|
+| 🌟 Smart Saver | Saving rate ≥ 30% | Mulai investasi reksa dana/emas |
+| ⚖️ Balanced Spender | Saving rate 10-29% | Tingkatkan dengan metode 50/30/20 |
+| 🛍️ Impulsive Spender | >50% transaksi kecil (< Rp 30rb) | Aturan "tunggu 24 jam" + limit harian |
+| 🔥 Heavy Spender | Saving rate < 10% | Metode amplop digital |
+
+---
+
 ## 🆚 WangkuAI vs Aplikasi Keuangan Lain
 
-|                                | 🐱 **WangkuAI** | 💼 Tabungan / Money Manager | 📱 YNAB / Wallet |
-| ------------------------------ | :-------------: | :-------------------------: | :--------------: |
-| Input via chat bahasa natural  |       ✅        |             ❌              |        ❌        |
-| Kategori terdeteksi otomatis   |       ✅        |          ❌ Manual          |    ❌ Manual     |
-| Multi-item dalam 1 pesan       |       ✅        |             ❌              |        ❌        |
-| Hitung `3x@12000` otomatis     |       ✅        |             ❌              |        ❌        |
-| Deteksi tanggal dari teks      |       ✅        |             ❌              |        ❌        |
-| Bahasa Indonesia penuh         |       ✅        |         🔶 Sebagian         |        ❌        |
-| Tips keuangan kontekstual      |       ✅        |             ❌              |        ❌        |
-| Budget alert real-time di chat |       ✅        |         🔶 Premium          |    🔶 Premium    |
-| Dashboard + export CSV gratis  |       ✅        |         🔶 Berbayar         |   🔶 Berbayar    |
-| Multi-user cloud               |       ✅        |         🔶 Berbayar         |   🔶 Berbayar    |
-| Open source & self-hostable    |       ✅        |             ❌              |        ❌        |
+|                                | 🐱 **WangkuAI v2** | 💼 Money Manager | 📱 YNAB / Wallet |
+| ------------------------------ | :--------------: | :-------------: | :--------------: |
+| Input via chat bahasa natural  |        ✅        |       ❌        |        ❌        |
+| Kategori terdeteksi otomatis   |        ✅        |    ❌ Manual    |    ❌ Manual     |
+| Multi-item dalam 1 pesan       |        ✅        |       ❌        |        ❌        |
+| Hitung `3x@12000` otomatis     |        ✅        |       ❌        |        ❌        |
+| Deteksi tanggal dari teks      |        ✅        |       ❌        |        ❌        |
+| Bahasa Indonesia penuh         |        ✅        |   🔶 Sebagian   |        ❌        |
+| Insight ranking kategori       |        ✅        |   🔶 Premium    |   🔶 Premium     |
+| Profil spender AI              |        ✅        |       ❌        |        ❌        |
+| Prediksi saldo habis           |        ✅        |   🔶 Premium    |   🔶 Premium     |
+| Perbandingan minggu/bulan      |        ✅        |   🔶 Premium    |   🔶 Premium     |
+| Goal tracking tabungan bulanan |        ✅        |   🔶 Premium    |   🔶 Premium     |
+| Smart recommendation engine    |        ✅        |       ❌        |        ❌        |
+| Anomaly detection otomatis     |        ✅        |       ❌        |        ❌        |
+| Budget alert real-time di chat |        ✅        |   🔶 Premium    |   🔶 Premium     |
+| Dashboard + export CSV gratis  |        ✅        |   🔶 Berbayar   |   🔶 Berbayar    |
+| Multi-user cloud               |        ✅        |   🔶 Berbayar   |   🔶 Berbayar    |
+| Open source & self-hostable    |        ✅        |       ❌        |        ❌        |
 
-> **Intinya:** WangkuAI adalah satu-satunya yang memahami `"beli baju 80rb dan makan 25rb dan kopi 15rb"` sebagai **3 transaksi berbeda, setiap kategori terdeteksi otomatis**, dalam hitungan detik. Nol form. Nol klik. Nol ribet.
+> **Intinya:** WangkuAI v2 bukan sekadar pencatat — ia **menganalisa pola hidup keuanganmu**, memberi insight mendalam, memprediksi kondisi dompetmu, dan memberikan rekomendasi personal yang relevan. Semua lewat chat biasa.
 
 ---
 
@@ -226,37 +382,38 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
  ┌──────────────────────────────────────┐
  │         Next.js API Routes           │
  │                                      │
- │  /api/chat      ← otak chatbot       │
+ │  /api/chat      ← otak chatbot v2    │
  │  /api/stats/*   ← data dashboard     │
  │  /api/balance   ← manajemen saldo    │
- │  /api/budget    ← limit harian       │
+ │  /api/budget    ← limit & goal       │
  │  /api/auth/*    ← NextAuth login     │
  └──────────┬───────────────────────────┘
             │
      ┌──────┴──────┐
      ▼             ▼
- ┌─────────┐   ┌────────────────────┐
- │  NLP    │   │    Prisma ORM      │
- │ Engine  │   │                    │
- │         │   │  User              │
- │ HF API  │   │  Balance           │
- │ (BERT)  │   │  Transaction       │
- │    +    │   │  BudgetLimit       │
- │ Regex   │   │  ChatHistory       │
- │    +    │   │                    │
- │ Extract │   │  SQLite / Postgres │
- └─────────┘   └────────────────────┘
+ ┌─────────┐   ┌────────────────────────────┐
+ │ Gemini  │   │       Prisma ORM           │
+ │ 2.5     │   │                            │
+ │ Flash   │   │  User, Balance             │
+ │         │   │  Transaction               │
+ │ Intent  │   │  BudgetLimit (limit+goal)  │
+ │ Parser  │   │  ChatHistory               │
+ │    +    │   │                            │
+ │ 19      │   │  SQLite / Postgres         │
+ │ Handler │   │                            │
+ └─────────┘   └────────────────────────────┘
 ```
 
-| Layer        | Yang Dipakai                                 |
-| ------------ | -------------------------------------------- |
-| Framework    | Next.js 16, TypeScript                       |
-| Auth         | NextAuth.js (JWT session)                    |
-| Database     | SQLite (dev) · PostgreSQL (prod)             |
-| ORM          | Prisma                                       |
-| NLP Utama    | HuggingFace IndoBERT (Zero-Shot NLI)         |
-| NLP Fallback | Custom regex rule engine (selalu aktif)      |
-| UI           | Vanilla CSS · Pixelify Sans · Press Start 2P |
+| Layer        | Yang Dipakai                                              |
+| ------------ | --------------------------------------------------------- |
+| Framework    | Next.js 16, TypeScript                                    |
+| Auth         | NextAuth.js (JWT session)                                 |
+| Database     | SQLite (dev) · PostgreSQL (prod)                          |
+| ORM          | Prisma                                                    |
+| AI Utama     | Google Gemini 2.5 Flash (Intent + Reply Generation)       |
+| NLP Fallback | HuggingFace IndoBERT Zero-Shot + Custom Regex Rule Engine |
+| Analytics    | Rule-based aggregation, burn rate, persona classification |
+| UI           | Vanilla CSS · Pixelify Sans · Press Start 2P             |
 
 ---
 
@@ -296,7 +453,7 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 
 ## 🗺️ Roadmap
 
-**Sudah Ada:**
+**Sudah Ada (v1.0):**
 
 - [x] 12 intent NLP (expense, income, budget, laporan, tips, dst.)
 - [x] Catat multi-item dalam 1 pesan
@@ -309,15 +466,26 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 - [x] Multi-user dengan data terisolasi
 - [x] Autentikasi lengkap (register, login, session)
 
-**Akan Datang:**
+**Baru Ditambahkan (v2.0) 🆕:**
+
+- [x] 📊 Insight kategori pengeluaran terbesar (minggu/bulan)
+- [x] 🧠 Financial health check + persona spender AI
+- [x] 🔮 Prediksi saldo habis + proyeksi akhir bulan
+- [x] 📊 Perbandingan periode (minggu ini vs lalu, bulan ini vs lalu)
+- [x] 🎯 Goal tracking tabungan bulanan (set + progress)
+- [x] 💡 Smart recommendation engine berbasis pola nyata
+- [x] 🚨 Anomaly detection — deteksi lonjakan pengeluaran otomatis
+- [x] 💬 Conversational follow-up setelah setiap transaksi
+
+**Akan Datang (v3.0):**
 
 - [ ] 📸 OCR Struk — foto nota langsung dibaca & dicatat
 - [ ] 💼 Buku Utang/Kasbon — catat piutang pelanggan
 - [ ] 🛒 Mode Kasir (POS) — untuk UMKM & warung kecil
 - [ ] 💰 Dompet ganda — pisahkan uang pribadi vs usaha
-- [ ] 🤖 AI Financial Analyst — analisa keuangan via Gemini AI
 - [ ] 📄 Export PDF — laporan laba-rugi siap cetak
-- [ ] 📈 Prediksi pengeluaran dengan time-series forecasting
+- [ ] 📧 Email reminder mingguan otomatis
+- [ ] 📱 PWA + notifikasi push
 
 ---
 
@@ -344,9 +512,9 @@ git push origin feat/nama-fitur
   <br/>
   <img src="public/img/robot-cat.png" width="80" alt="WangkuAI" />
   <br/><br/>
-  <strong>WangkuAI</strong> — <em>Kelola Keuangan Pribadimu, Semudah Chat</em>
+  <strong>WangkuAI v2.0</strong> — <em>Kelola Keuangan Pribadimu, Semudah Chat</em>
   <br/><br/>
   <img src="https://img.shields.io/badge/Made%20with-☕%20Kopi-brown?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Powered%20by-IndoBERT%20NLP-orange?style=for-the-badge&logo=huggingface" />
+  <img src="https://img.shields.io/badge/Powered%20by-Gemini%202.5%20Flash-purple?style=for-the-badge&logo=google" />
   <img src="https://img.shields.io/badge/Open%20Source-❤️-red?style=for-the-badge" />
 </div>

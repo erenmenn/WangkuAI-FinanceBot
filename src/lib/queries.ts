@@ -1,5 +1,5 @@
 import { prisma } from './prisma';
-import { format, startOfDay, endOfDay, startOfMonth, endOfMonth } from 'date-fns';
+import { format, startOfDay, endOfDay, startOfMonth, endOfMonth, subWeeks, startOfWeek, endOfWeek, subMonths, subDays } from 'date-fns';
 
 // ── BALANCE ──
 export async function getBalance(userId: string): Promise<number> {
@@ -192,4 +192,136 @@ export async function getTodayStats(userId: string) {
       category: t.category,
     })),
   };
+}
+
+// ── WEEK HELPERS ──
+export async function getThisWeekTransactions(userId: string) {
+  const now = new Date();
+  return prisma.transaction.findMany({
+    where: {
+      userId,
+      date: { gte: startOfWeek(now, { weekStartsOn: 1 }), lte: endOfWeek(now, { weekStartsOn: 1 }) },
+    },
+    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+  });
+}
+
+export async function getLastWeekTransactions(userId: string) {
+  const lastWeekDate = subWeeks(new Date(), 1);
+  return prisma.transaction.findMany({
+    where: {
+      userId,
+      date: {
+        gte: startOfWeek(lastWeekDate, { weekStartsOn: 1 }),
+        lte: endOfWeek(lastWeekDate, { weekStartsOn: 1 }),
+      },
+    },
+    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+  });
+}
+
+export async function getLastMonthTransactions(userId: string) {
+  const lastMonthDate = subMonths(new Date(), 1);
+  return prisma.transaction.findMany({
+    where: {
+      userId,
+      date: {
+        gte: startOfMonth(lastMonthDate),
+        lte: endOfMonth(lastMonthDate),
+      },
+    },
+    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+  });
+}
+
+// ── CATEGORY AGGREGATION ──
+export interface CategoryStat {
+  category: string;
+  total: number;
+  count: number;
+}
+
+export function aggregateByCategory(transactions: { type: string; amount: number; category: string | null }[]): CategoryStat[] {
+  const map: Record<string, CategoryStat> = {};
+  for (const tx of transactions) {
+    if (tx.type !== 'expense') continue;
+    const cat = tx.category ?? 'lainnya';
+    if (!map[cat]) map[cat] = { category: cat, total: 0, count: 0 };
+    map[cat].total += tx.amount;
+    map[cat].count += 1;
+  }
+  return Object.values(map).sort((a, b) => b.total - a.total);
+}
+
+// ── BURN RATE (daily average expense last 7 days) ──
+export async function getDailyBurnRate(userId: string): Promise<number> {
+  const sevenDaysAgo = subDays(new Date(), 7);
+  const result = await prisma.transaction.aggregate({
+    where: {
+      userId,
+      type: 'expense',
+      date: { gte: startOfDay(sevenDaysAgo), lte: endOfDay(new Date()) },
+    },
+    _sum: { amount: true },
+  });
+  const total = result._sum.amount ?? 0;
+  return Math.round(total / 7);
+}
+
+// ── SAVING GOAL ──
+export async function getSavingGoal(userId: string): Promise<{ target: number; saved: number } | null> {
+  try {
+    const bl = await prisma.budgetLimit.findUnique({
+      where: { userId_type: { userId, type: 'saving_goal' } },
+    });
+    if (!bl) return null;
+    const now = new Date();
+    const incResult = await prisma.transaction.aggregate({
+      where: {
+        userId,
+        type: 'income',
+        date: { gte: startOfMonth(now), lte: endOfMonth(now) },
+      },
+      _sum: { amount: true },
+    });
+    const expResult = await prisma.transaction.aggregate({
+      where: {
+        userId,
+        type: 'expense',
+        date: { gte: startOfMonth(now), lte: endOfMonth(now) },
+      },
+      _sum: { amount: true },
+    });
+    const totalInc = incResult._sum.amount ?? 0;
+    const totalExp = expResult._sum.amount ?? 0;
+    const saved = Math.max(0, totalInc - totalExp);
+    return { target: bl.amount, saved };
+  } catch {
+    return null;
+  }
+}
+
+export async function setSavingGoal(userId: string, target: number): Promise<void> {
+  await prisma.budgetLimit.upsert({
+    where: { userId_type: { userId, type: 'saving_goal' } },
+    create: { userId, type: 'saving_goal', amount: target },
+    update: { amount: target },
+  });
+}
+
+// ── ANOMALY: Baseline daily expense (avg last 14 days, excluding today) ──
+export async function getBaselineDailyExpense(userId: string): Promise<number> {
+  const now = new Date();
+  const start = subDays(now, 15);
+  const end = subDays(startOfDay(now), 1);
+  const result = await prisma.transaction.aggregate({
+    where: {
+      userId,
+      type: 'expense',
+      date: { gte: startOfDay(start), lte: endOfDay(end) },
+    },
+    _sum: { amount: true },
+  });
+  const total = result._sum.amount ?? 0;
+  return Math.round(total / 14);
 }

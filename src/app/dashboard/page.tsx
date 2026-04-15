@@ -396,13 +396,13 @@ export default function DashboardPage() {
             </div>
             <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',borderBottom: '4px solid #1C1917' }}>
               {[
-                { lbl:'Keluar', val:'–'+formatRp(data.todayExpense), color:'#991B1B' },
-                { lbl:'Masuk',  val:'+'+formatRp(data.todayIncome),  color:'#065F46' },
-                { lbl:'Transaksi', val:String(data.todayTxCount)+' txn', color:'#1C1917' },
+                { lbl:'Keluar', val:'–'+formatRp(data.todayExpense).replace('Rp ', 'Rp'), color:'#991B1B' },
+                { lbl:'Masuk',  val:'+'+formatRp(data.todayIncome).replace('Rp ', 'Rp'),  color:'#065F46' },
+                { lbl:'Transaksi', val:String(data.todayTxCount)+' trx', color:'#1C1917' },
               ].map((it,i) => (
-                <div key={i} style={{ padding:'13px 14px', borderRight: i<2 ? '1px solid rgba(255, 160, 0,.07)' : 'none' }}>
-                  <div style={{ fontSize:'10px',fontWeight:700,textTransform:'uppercase',letterSpacing:'.6px',color:'#1C1917',marginBottom:'3px' }}>{it.lbl}</div>
-                  <div style={{ fontFamily: "'Press Start 2P', system-ui", fontWeight: 800, fontSize:'10px',color:it.color }}>{it.val}</div>
+                <div key={i} style={{ padding:'12px 8px', borderRight: i<2 ? '1px solid rgba(255, 160, 0,.07)' : 'none', minWidth: 0 }}>
+                  <div style={{ fontSize:'9px',fontWeight:700,textTransform:'uppercase',letterSpacing:'.2px',color:'#1C1917',marginBottom:'4px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{it.lbl}</div>
+                  <div style={{ fontFamily: "'Press Start 2P', system-ui", fontWeight: 800, fontSize:'8px',color:it.color, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{it.val}</div>
                 </div>
               ))}
             </div>

@@ -93,7 +93,7 @@ async function parseWithGemini(userMessage: string, balance: number, mode: strin
   if (!apiKey) throw new Error('GEMINI_API_KEY tidak ditemukan di .env!');
 
   const prompt = `
-Kamu adalah MinoAI, asisten keuangan jenius.
+Kamu adalah WangkuAI, asisten keuangan jenius.
 Tugasmu adalah membedah pesan user dan mengembalikan 100% RAW JSON tanpa markdown block/teks apapun.
 
 Data Saldo User saat ini: Rp ${balance}
@@ -101,7 +101,7 @@ Data Saldo User saat ini: Rp ${balance}
 Struktur JSON Wajib:
 {
   "intent": "transaction" | "check_balance" | "check_month" | "check_today" | "check_history" | "check_date" | "check_range" | "set_limit" | "set_balance" | "clear_today" | "insight_category_spending" | "financial_health_check" | "spending_prediction" | "comparison_period" | "goal_tracking" | "recommendation_engine" | "anomaly_detection" | "set_goal" | "deposit_saving" | "knowledge",
-  "replyText": "Respon singkat bergaya gaul dan penyemangat khas asisten AI (MinoAI)",
+  "replyText": "Respon singkat bergaya gaul dan penyemangat khas asisten AI (WangkuAI)",
   "transactions": [
     {
       "type": "expense" | "income",
@@ -120,19 +120,19 @@ Struktur JSON Wajib:
   "isMixed": boolean
 }
 
-ATURAN INTENT BARU:
-- "check_date": user menanyakan pengeluaran tanggal spesifik -> isikan dateStr
-- "check_range": user menanyakan rentang tanggal -> isikan startDate & endDate
+ATURAN INTENT (BACA DENGAN TELITI):
+- "check_date": user menanyakan pengeluaran TANGGAL SPESIFIK (mis: "pengeluaran 15 maret") -> isikan dateStr format YYYY-MM-DD
+- "check_range": user menanyakan rentang TANGGAL EKSPLISIT (mis: "dari 1-10 maret") -> isikan startDate & endDate YYYY-MM-DD. JANGAN pakai intent ini jika user bilang "minggu ini", "bulan ini", atau frasa relatif lainnya!
+- "insight_category_spending": user tanya "paling boros di mana", "kategori terbanyak", "paling banyak habis di apa", "pengeluaran minggu ini", "pengeluaran bulan ini" — GUNAKAN INI untuk frasa relatif seperti minggu ini/bulan ini!
 - "set_limit": user set budget atau limit pengeluaran -> isikan limitAmount
 - "set_balance": user menetapkan saldo dompet -> isikan balanceAmount
 - "clear_today": user ingin menghapus/mereset transaksi hari ini
-- "insight_category_spending": user tanya "paling boros di mana", "kategori terbanyak", "paling banyak habis di apa"
 - "financial_health_check": user tanya "keuanganku sehat gak", "aku boros gak", "tipe spender apa aku"
 - "spending_prediction": user tanya "bakal habis kapan", "bisa nabung gak bulan ini", "kalau terus kayak gini"
-- "comparison_period": user bandingkan minggu ini vs lalu, bulan ini vs lalu
+- "comparison_period": user MEMBANDINGKAN dua periode (minggu ini vs lalu, bulan ini vs lalu)
 - "goal_tracking": user tanya progress tabungan / goal
 - "set_goal": user SET target nabung, misal "aku mau nabung 1 juta bulan ini" — isi goalAmount
-- "deposit_saving": user MEMASUKKAN/MENABUNG/MENYIMPAN uang, misal "simpan 50rb untuk tabungan", "menabung 50rb hari ini" — isi depositAmount
+- "deposit_saving": user MEMASUKKAN/MENABUNG/MENYIMPAN uang, misal "simpan 50rb untuk tabungan" — isi depositAmount
 - "recommendation_engine": user minta "kasih saran keuangan", "rekomendasi", "analisa keuanganku"
 - "anomaly_detection": user tanya tentang pengeluaran tidak biasa / lonjakan hari ini
 - "knowledge": pertanyaan umum finansial yang tidak termasuk kategori di atas
@@ -154,26 +154,45 @@ WARNING: Aturan ini HANYA untuk \`replyText\`. Untuk \`transactions\`, \`amount\
 Pesan dari user: "${userMessage}"
   `;
 
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.1 }
-    })
-  });
+  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const MAX_RETRIES = 3;
+  const BASE_DELAY_MS = 1500; // 1.5s → 3s → 6s (exponential backoff)
 
-  if (!res.ok) {
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    const res = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.1 }
+      })
+    });
+
+    // ✅ Sukses → langsung proses
+    if (res.ok) {
+      const data = await res.json();
+      if (!data.candidates || !data.candidates[0]) throw new Error('Gemini tidak memberikan response valid');
+      const rawText = data.candidates[0].content.parts[0].text;
+      console.log('Gemini Raw Reply:', rawText);
+      const cleanJson = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+      return JSON.parse(cleanJson);
+    }
+
+    // ⏳ 503/429 (overload / rate limit) → tunggu lalu coba lagi
+    if ((res.status === 503 || res.status === 429) && attempt < MAX_RETRIES) {
+      const delay = BASE_DELAY_MS * Math.pow(2, attempt - 1);
+      console.warn(`Gemini ${res.status} — percobaan ${attempt}/${MAX_RETRIES}, retry dalam ${delay}ms...`);
+      await new Promise(r => setTimeout(r, delay));
+      continue;
+    }
+
+    // ❌ Error lain atau sudah habis retry
     const errText = await res.text();
-    console.error('Gemini API Error Detail:', errText);
-    throw new Error('Gagal memanggil Gemini API: ' + res.status);
+    console.error(`Gemini API Error (attempt ${attempt}/${MAX_RETRIES}):`, errText);
+    throw new Error(`Gemini API error ${res.status}`);
   }
-  const data = await res.json();
-  if (!data.candidates || !data.candidates[0]) throw new Error('Gemini tidak memberikan response valid');
-  const rawText = data.candidates[0].content.parts[0].text;
-  console.log('Gemini Raw Reply:', rawText);
-  const cleanJson = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
-  return JSON.parse(cleanJson);
+
+  throw new Error('Gemini tidak bisa dihubungi setelah 3 percobaan');
 }
 
 // ─── MAIN HANDLER ───────────────────────────────────────────────────
@@ -198,7 +217,10 @@ export async function POST(req: Request) {
       geminiObj = await parseWithGemini(userMessage, currentBalance, mode);
     } catch (e) {
       console.error('Gemini Error:', e);
-      return NextResponse.json({ success: false, error: 'Kendala server AI, coba lagi ya!' }, { status: 500 });
+      const errMsg = '⚠️ WangkuAI lagi sibuk banget nih bestie~ Server AI-nya lagi penuh sesak 😅\nCoba ulangi pesanmu dalam beberapa detik ya! 🙏';
+      await saveChatMessage(userId, 'assistant', errMsg);
+      // Return 200 bukan 500 supaya pesan error tampil di chat, tidak crash
+      return NextResponse.json({ success: true, response: errMsg, balance: currentBalance });
     }
 
     const { intent, transactions, replyText, goalAmount, depositAmount, dateStr, startDate, endDate, limitAmount, balanceAmount } = geminiObj;
@@ -244,19 +266,6 @@ export async function POST(req: Request) {
           }
         }
 
-        // Anomaly check after recording expense
-        if (totalExp > 0) {
-          const baseline = await getBaselineDailyExpense(userId);
-          if (baseline > 0) {
-            const todaySpent = await getTodayExpense(userId);
-            const spike = pct(todaySpent - baseline, baseline);
-            if (spike >= 150 && todaySpent > baseline) {
-              const topCatData = aggregateByCategory(await getTodayTransactions(userId));
-              const topCat = topCatData[0];
-              finalReply += `\n\n🚨 Pengeluaran Tidak Biasa!\nHari ini ${rp(todaySpent)} (biasanya ~${rp(baseline)})\n⚠️ Lonjakan ${spike}%${topCat ? `\n📌 Penyebab utama: ${catEmoji(topCat.category)} ${topCat.category}` : ''}`;
-            }
-          }
-        }
 
         // Conversational follow-up hook
         if (totalExp > 0) finalReply += `\n\n💬 Mau aku bantu set limit pengeluaran harian? Ketik "set limit harian [nominal]" 🎯`;
@@ -656,37 +665,6 @@ export async function POST(req: Request) {
       }
     }
 
-    // ══════════════════════════════════════════════════════════════════
-    // 13. ANOMALY DETECTION 🚨
-    // ══════════════════════════════════════════════════════════════════
-    else if (intent === 'anomaly_detection') {
-      const [todayTxs, baseline] = await Promise.all([
-        getTodayTransactions(userId),
-        getBaselineDailyExpense(userId),
-      ]);
-      const todaySpent = todayTxs.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-      const spike      = baseline > 0 ? pct(todaySpent - baseline, baseline) : 0;
-      const cats       = aggregateByCategory(todayTxs);
-
-      finalReply = [`🔍 Deteksi Anomali Pengeluaran`, SEP].join('\n');
-      finalReply += `\n📅 Pengeluaran Hari Ini : ${rp(todaySpent)}`;
-      finalReply += `\n📊 Rata-rata Biasanya   : ${rp(baseline)}`;
-      finalReply += `\n${SEP}`;
-
-      if (baseline === 0) {
-        finalReply += '\nBelum ada data historis (min 3 hari) untuk perbandingan.';
-      } else if (spike >= 150) {
-        finalReply += `\n🚨 LONJAKAN ${spike}%! Pengeluaran jauh di atas normal!`;
-        if (cats[0]) finalReply += `\n📌 Penyebab utama: ${catEmoji(cats[0].category)} ${cats[0].category} ${rp(cats[0].total)}`;
-        finalReply += `\n\n💡 Saran: Evaluasi apakah pengeluaran ini memang perlu atau bisa dikurangi besok.`;
-      } else if (spike >= 50) {
-        finalReply += `\n⚠️ Sedikit di atas normal (+${spike}%) — hati-hati ya.`;
-      } else if (todaySpent < baseline * 0.5) {
-        finalReply += `\n✅ Keren! Hari ini kamu lebih hemat dari biasanya. Terus pertahankan!`;
-      } else {
-        finalReply += `\n✅ Pengeluaran hari ini normal, tidak ada anomali.`;
-      }
-    }
 
     // ══════════════════════════════════════════════════════════════════
     // 14. KNOWLEDGE / FAQ / DEFAULT
@@ -713,15 +691,35 @@ export async function POST(req: Request) {
         finalReply += `\n\n${replyText}`;
       }
     } else if (intent === 'check_range' && startDate && endDate) {
-      const txs = await getDateRangeTransactions(userId, startDate, endDate);
-      const todayExp = txs.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-      const todayInc = txs.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-      if (mode === 'voice') {
-        finalReply = replyText;
-      } else {
-        finalReply = [`📅 Laporan: ${tgl(startDate)} - ${tgl(endDate)}`, SEP].join('\n');
-        finalReply += `\n💸 Total Keluar: ${rp(todayExp)}\n💰 Total Masuk : ${rp(todayInc)}`;
+      // Sanity check: jika tahun startDate berbeda jauh dari tahun ini, jangan pakai date range lama 
+      const currentYear = new Date().getFullYear();
+      const parsedYear  = new Date(startDate).getFullYear();
+      if (Math.abs(parsedYear - currentYear) > 1) {
+        // Fallback: Gemini salah parse, tampilkan data minggu ini saja
+        const txs     = await getThisWeekTransactions(userId);
+        const wExp    = txs.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const wInc    = txs.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        finalReply    = [`📅 Pengeluaran Minggu Ini`, SEP].join('\n');
+        if (txs.length === 0) finalReply += '\nBelum ada transaksi minggu ini!';
+        else {
+          txs.forEach((tx, i) => {
+            const s = tx.type === 'income' ? '+' : '-';
+            finalReply += `\n${i + 1}. ${catEmoji(tx.category ?? 'lainnya')} ${tx.description} — ${s}${rp(tx.amount)}`;
+          });
+          finalReply += `\n${SEP}\n💸 Total Keluar: ${rp(wExp)}\n💰 Total Masuk : ${rp(wInc)}`;
+        }
         finalReply += `\n\n${replyText}`;
+      } else {
+        const txs = await getDateRangeTransactions(userId, startDate, endDate);
+        const todayExp = txs.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const todayInc = txs.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        if (mode === 'voice') {
+          finalReply = replyText;
+        } else {
+          finalReply = [`📅 Laporan: ${tgl(startDate)} - ${tgl(endDate)}`, SEP].join('\n');
+          finalReply += `\n💸 Total Keluar: ${rp(todayExp)}\n💰 Total Masuk : ${rp(todayInc)}`;
+          finalReply += `\n\n${replyText}`;
+        }
       }
     } else if (intent === 'set_limit' && limitAmount !== undefined) {
       await setBudgetLimit(userId, 'daily', limitAmount);
@@ -744,7 +742,7 @@ export async function POST(req: Request) {
     else {
       finalReply = mode === 'voice'
         ? replyText
-        : `💡 MinoAI Tips\n${SEP}\n${replyText}\n\n🏦 (Saldo Saat Ini: ${rp(runningBalance)})`;
+        : `💡 WangkuAI Tips\n${SEP}\n${replyText}\n\n🏦 (Saldo Saat Ini: ${rp(runningBalance)})`;
     }
 
     await saveChatMessage(userId, 'assistant', finalReply);

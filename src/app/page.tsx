@@ -189,13 +189,13 @@ export default function Home() {
             </div>
             <div className="logo-texts">
               <div className="logo-name">
-                MinoAI
+                WangkuAI
                 <span style={{ fontSize:10, background:'rgba(255, 160, 0,0.1)', color:'#E65100', borderRadius:6, padding:'2px 6px', marginLeft:6, fontWeight:600, verticalAlign:'middle' }}>AI</span>
                 <div className="btn-info" onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
                   i
                   {showTooltip && (
                     <div className="info-tooltip visible" style={{ left:60, top:0, position:'absolute' }}>
-                      <div className="info-tooltip-title">MinoAI</div>
+                      <div className="info-tooltip-title">WangkuAI</div>
                       <div className="info-tooltip-desc">Asisten keuangan pribadi yang memahami bahasa sehari-hari.</div>
                       <ul className="info-tooltip-list">
                         <li>Catat pemasukan &amp; pengeluaran</li>
@@ -255,6 +255,24 @@ export default function Home() {
                 >
                   Edit
                 </button>
+                {budgetLimit > 0 && (
+                  <button
+                    onClick={() => {
+                      if (confirm('Batalkan program budget harian?')) {
+                        fetch('/api/budget', {
+                          method:'POST',
+                          headers:{'Content-Type':'application/json'},
+                          body: JSON.stringify({ daily_limit: 0 })
+                        }).then(loadBudget);
+                      }
+                    }}
+                    style={{ background: '#ef4444', border: '3px solid #1C1917', borderRadius: '4px', fontSize: '11px', fontFamily: "'Pixelify Sans', sans-serif", color: '#fff', fontWeight: 700, cursor: 'pointer', padding: '4px 8px', transition: 'all 0.1s', boxShadow: '2px 2px 0 #1C1917' }}
+                    onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = '0px 0px 0 #1C1917'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '2px 2px 0 #1C1917'; }}
+                  >
+                    Batal
+                  </button>
+                )}
               </div>
             </div>
             <div style={{ height: '14px', background: '#fff', border: '3px solid #1C1917', borderRadius: '4px', overflow: 'hidden' }}>
@@ -367,20 +385,20 @@ export default function Home() {
                 <Settings size={16} /> Setting
               </Link>
 
-              <button
-                onClick={() => signOut({ callbackUrl: '/auth/login' })}
+              <Link
+                href="/predict"
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                  padding: '10px 6px', background: '#ef4444', color: '#fff',
-                  borderRadius: '4px', border: '3px solid #1C1917', cursor: 'pointer',
+                  padding: '10px 6px', background: '#8b5cf6', color: '#fff',
+                  borderRadius: '4px', border: '3px solid #1C1917', cursor: 'pointer', textDecoration: 'none',
                   fontFamily: "'Pixelify Sans', sans-serif", fontWeight: 700, fontSize: '14px',
                   boxShadow: '3px 3px 0px #1C1917', transition: 'all 0.1s ease'
                 }}
                 onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = '1px 1px 0px #1C1917'; }}
                 onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; e.currentTarget.style.boxShadow = '3px 3px 0px #1C1917'; }}
               >
-                <LogOut size={16} /> Keluar
-              </button>
+                <span style={{ fontSize: '14px' }}>🔮</span> Prediksi AI
+              </Link>
             </div>
           </div>
         </aside>
@@ -390,11 +408,11 @@ export default function Home() {
 
           {/* Top bar */}
           <div className="topbar">
-            <div className="topbar-title">Chat dengan MinoAI</div>
+            <div className="topbar-title">Chat dengan WangkuAI</div>
             <div className="topbar-right" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <div className="status-dot" />
-                <span>MinoAI Online ✦ Hybrid NLP</span>
+                <span>WangkuAI Online ✦ Hybrid NLP</span>
               </div>
 
             </div>
@@ -455,7 +473,7 @@ export default function Home() {
                     <span className="sparkle sp-2">⭐</span>
                     <span className="sparkle sp-3">✨</span>
                     <span className="sparkle sp-4">✨</span>
-                    <img className="mascot-wiggle" src="/img/robot-cat.png" alt="MinoAI Mascot" style={{ height:'220px', width:'auto', imageRendering:'pixelated', filter:'drop-shadow(6px 6px 0px #1C1917)', position: 'relative', zIndex: 1 }} />
+                    <img className="mascot-wiggle" src="/img/robot-cat.png" alt="WangkuAI Mascot" style={{ height:'220px', width:'auto', imageRendering:'pixelated', filter:'drop-shadow(6px 6px 0px #1C1917)', position: 'relative', zIndex: 1 }} />
                   </div>
                   <div className="welcome-dashboard">
                     <div className="wd-card wd-balance">
@@ -492,7 +510,7 @@ export default function Home() {
                     )}
                   </div>
 
-                  <div className="welcome-heading">MinoAI</div>
+                  <div className="welcome-heading">WangkuAI</div>
                   <div className="welcome-sub">Catat pengeluaran, cek saldo, atau minta analitik. Asisten simpel yang minimalis.</div>
 
                   {/* Quick action chips */}

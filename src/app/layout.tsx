@@ -3,7 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MinoAI — Asisten Keuangan Pribadi",
+  title: "WangkuAI — Asisten Keuangan Pribadi",
   description: "Asisten keuangan berbasis AI yang memahami bahasa sehari-hari. Catat pemasukan, pengeluaran, dan pantau saldo secara real-time.",
   icons: {
     icon: '/img/robot-cat.png',

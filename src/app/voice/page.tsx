@@ -306,7 +306,7 @@ export default function VoiceAssistantPage() {
           {/* Mascot Image */}
           <img 
             src="/img/robot-cat.png" 
-            alt="MinoAI Voice Mascot" 
+            alt="WangkuAI Voice Mascot" 
             className={(isListening && transcript) ? 'mascot-speaking' : isProcessing ? 'mascot-processing' : ''}
             style={{ 
               height: '240px', 
@@ -380,7 +380,7 @@ export default function VoiceAssistantPage() {
               fontSize: '14px',
               fontWeight: 'bold'
             }}>
-              MinoAI merespon:
+              WangkuAI merespon:
             </div>
             <div 
               style={{ fontSize: '22px', lineHeight: '1.4', color: '#1C1917' }}

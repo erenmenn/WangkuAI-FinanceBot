@@ -108,7 +108,7 @@ export default function RegisterPage() {
               fontWeight: 700,
               color: "#E65100",
               letterSpacing: "-0.5px",
-            }}>MinoAI</div>
+            }}>WangkuAI</div>
             <div style={{
               fontFamily: "'VT323', monospace",
               fontSize: 13,

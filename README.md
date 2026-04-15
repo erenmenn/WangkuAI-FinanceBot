@@ -529,6 +529,41 @@ Satu pesan darimu melewati proses ini dalam hitungan milidetik:
 
 ---
 
+## 🤖 Perancangan Intelligent Agent (PEAS)
+
+WangkuAI dirancang sebagai **Intelligent Agent** yang bertugas membantu pengguna mengelola keuangan harian mereka secara proaktif. Berdasarkan kerangka **PEAS** (Performance, Environment, Actuators, Sensors), berikut adalah rancangan sistem agen cerdas WangkuAI:
+
+### 1. Performance Measure (Ukuran Kinerja)
+Indikator untuk mengevaluasi seberapa sukses dan efektif WangkuAI:
+- **Akurasi Ekstraksi (NLP):** Ketepatan mengekstrak intent, nominal, barang, dan tanggal dari bahasa gaul/santai tanpa form.
+- **Peningkatan Tabungan (Saving Rate):** Persentase keberhasilan pengguna mencapai target *goal tracking* setiap bulannya.
+- **Kenyamanan & Responsivitas:** Kecepatan balasan dari sistem (low latency) serta pengalaman yang *"frictionless"* selama mencatat keuangan untuk meminimalisir input manual.
+- **Ketepatan Insight & Prediksi:** Relevansi rekomendasi personal, profil spender, serta akurasi prediksi hari saldo habis (*burn rate*).
+
+### 2. Environment (Lingkungan)
+Dunia kerja tempat WangkuAI beroperasi dan berinteraksi:
+- **Area Keuangan Pribadi (Personal Finance):** Saldo pengguna, transaksi masuk/keluar, batas pengeluaran bulanan/harian.
+- **Antarmuka Percakapan (Next.js Chat UI):** Media komunikasi web chat interaktif secara *real-time* dengan teks maupun suara.
+- **Waktu & Kalender (Temporal State):** Konteks waktu yang terus berjalan seperti hari, tanggal, bulan berjalan, sisa hari dalam seminggu/sebulan.
+- **Data Historis (Cloud Database):** Catatan pengeluaran sebelumnya untuk dikalkulasi menjadi pola dasar (*baseline*).
+
+### 3. Actuators (Aktuator)
+Tindakan dan mekanisme output dari WangkuAI kepada environment:
+- **Chat Response Generator:** Memberikan balasan chat teks yang humanis, terformat (emoji), menyertakan indikator bar progres, insight harian, dan ringkasan.
+- **Database Executor (Prisma ORM):** Menulis (INSERT/UPDATE/DELETE) transaksi, saldo terkini, limit harian, target menabung, dan histori *chat*.
+- **Alert & Notifikasi Inline:** Menampilkan peringatan merah (🚨) segera setelah mendeteksi lonjakan biaya tak terduga (*anomaly*) atau anggaran berlebih (*over-budget*).
+- **Text-to-Speech (TTS) Synthesizer:** Mengubah respon teks AI menjadi balasan berbentuk sinyal suara yang bisa di dengar oleh pengguna.
+- **UI Dashboard Engine:** Menyajikan data terbaru pada antarmuka grafik chart visual dan tabel riwayat setelah interaksi *chat*.
+
+### 4. Sensors (Sensor)
+Bagaimana agen WangkuAI merasakan, membaca, dan menerima input dari lingkungannya:
+- **Text Input Receiver:** Menerima *string* dari kalimat natural yang tidak terstruktur melalui input ketikan pengguna.
+- **Speech Recognition (STT):** Menangkap *input* sinyal audio (suara) dan mendeteksi/mengubahnya menjadi transkripsi teks.
+- **Context & Session Memory:** Membaca konteks status *session* saat itu dan riwayat histori chat sebelumnya sehingga dapat merespon kesinambungan topik per pengguna.
+- **Backend Analytics Observers (Burn Rate & Anomaly Sensors):** Membaca kalkulasi *baseline* rata-rata biaya dari 14 hari terakhir serta membaca cepat pembakaran (*burn limit*) harian secara konstan sebagai *trigger*.
+
+---
+
 ## 🎯 25+ Kategori Terdeteksi Otomatis
 
 | Emoji | Kategori         | Contoh Kata Kunci                      |

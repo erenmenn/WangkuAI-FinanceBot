@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# documentation
+arsitektur.md
+finetuning.md
+lstm_finance_dokumentasi.md
+
